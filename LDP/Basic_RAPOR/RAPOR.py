@@ -74,12 +74,12 @@ def RAPPOR_aggregator(reported_Bs, f, d):
         for j in reported_Bs:
             sum_v += j[i]
 
-        results[i] = (sum_v - 0.5 * f) / (1 - f)
+        results[i] = (sum_v - 0.5 * f * len(reported_Bs)) / (1 - f)
     
     return results
 
 
-user_count = 100
+user_count = 30000
 domain_size = 30
 total_values = 50000
 
@@ -94,13 +94,11 @@ for _ in range(user_count):
 true_results = np.zeros(30)
 
 reported_Bs = []
-for _ in range(total_values):
-    user = random.randint(0, user_count - 1)
-    value = random.randint(0, domain_size - 1)
+for user in range(user_count):
+    value = random.uniform(0, domain_size - 1)
     true_results[value] += 1
 
     randomised_result = users[user].randomize(value)
-    # print(randomised_result)
     reported_Bs.append(randomised_result)
 
 
