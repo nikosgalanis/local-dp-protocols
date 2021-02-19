@@ -91,11 +91,11 @@ users = []
 for _ in range(user_count):
     users.append(RAPOR_client(f, domain_size, p, q))
 
-true_results = np.zeros(30)
+true_results = np.zeros(domain_size)
 
 reported_Bs = []
 for user in range(user_count):
-    value = random.uniform(0, domain_size - 1)
+    value = random.randint(0, domain_size - 1)
     true_results[value] += 1
 
     randomised_result = users[user].randomize(value)
