@@ -14,7 +14,7 @@ def generate_matrix(m, d):
     return F
 generate_matrix(5, 10)
 
-class Random_Matrix_Client():
+class Random_Matrix():
     def __init__(self, F, m, d, e):
         self.F = F
         self.m = m
@@ -44,15 +44,15 @@ class Random_Matrix_Client():
     def randomize(self, v):
         return self.perturb(self.encode(v))
 
-def Random_Matrix_aggregator(reported_values, public_matrix, d):
-    results = np.zeros(d)
-    for i in range(d):
-        sum_v = 0
-        for j in reported_values:
-            sum_v += j[1] * public_matrix[j[0]][i]
-        
-        results[i] = sum_v
-    return results
+    def aggregate(self, reported_values, public_matrix, d, *_):
+        results = np.zeros(d)
+        for i in range(d):
+            sum_v = 0
+            for j in reported_values:
+                sum_v += j[1] * public_matrix[j[0]][i]
+            
+            results[i] = sum_v
+        return results
 
 
 user_count = 50000

@@ -3,7 +3,7 @@ import random
 import math
 import numbers
 
-class Direct_Encoding_Client():
+class Direct_Encoding():
 	def __init__(self, e, d):
 		self.e = e
 		self.d = d
@@ -31,24 +31,24 @@ class Direct_Encoding_Client():
 		return self.perturbe(self.encode(v))
 	
 
-def Direct_Encoding_aggregator(reported_values, e, d):
-	results = np.zeros(d)
-	n = len(reported_values)
-	
-
-	p = math.exp(e) / (math.exp(e) + d - 1)
-	q = 1 / (math.exp(e) + d - 1)
-
-	for i in range(d):
-		sum_v = 0
-		for j in reported_values:
-			if (j == i):
-				sum_v += 1
+	def aggregate(self, reported_values, e, d, *_):
+		results = np.zeros(d)
+		n = len(reported_values)
 		
-		results[i] = ((sum_v) - n * q) / (p - q)
+
+		p = math.exp(e) / (math.exp(e) + d - 1)
+		q = 1 / (math.exp(e) + d - 1)
+
+		for i in range(d):
+			sum_v = 0
+			for j in reported_values:
+				if j == i:
+					sum_v += 1
+			
+			results[i] = ((sum_v) - n * q) / (p - q)
 
 
-	return results
+		return results
 
 user_count = 50000
 domain_size = 10
