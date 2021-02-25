@@ -25,7 +25,14 @@ class Histogram_Encoding():
 	def randomize(self, v):
 		return self.perturbe(self.encode(v))
 	
-	def aggregate(self, reported_values, e, d, threshold, method='THE', *_):
+	def aggregate(self, config):
+
+		reported_values = config['reported_values']
+		e = config['epsilon']
+		d = config['d']
+		threshold = config['threshold']
+		method = config['method']
+
 		results = np.zeros(d)
 		if method == 'SHE':
 			for i in range(d):
