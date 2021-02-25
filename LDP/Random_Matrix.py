@@ -27,7 +27,7 @@ class Random_Matrix():
 
 		return (r, x)
 
-	def perturb(self, ret):
+	def perturbe(self, ret):
 		r, x = ret
 
 		pr = math.exp(self.e) / (math.exp(self.e) + 1)
@@ -60,30 +60,30 @@ class Random_Matrix():
 		return results
 
 
-user_count = 50000
-domain_size = 10
-m = 100
-e = 0.7
+# user_count = 50000
+# domain_size = 10
+# m = 100
+# e = 0.7
 
-public_matrix = generate_matrix(m , domain_size)
+# public_matrix = generate_matrix(m , domain_size)
 
-users = []
+# users = []
 
-for _ in range(user_count):
-	users.append(Random_Matrix_Client(public_matrix, m, domain_size, e))
+# for _ in range(user_count):
+# 	users.append(Random_Matrix_Client(public_matrix, m, domain_size, e))
 
-true_results = np.zeros(domain_size)
+# true_results = np.zeros(domain_size)
 
-reported_values = []
+# reported_values = []
 
-for user in range(user_count):
-	value = random.randint(0, domain_size - 1)
-	true_results[value] += 1
+# for user in range(user_count):
+# 	value = random.randint(0, domain_size - 1)
+# 	true_results[value] += 1
 
-	randomized_result = users[user].randomize(value)
-	reported_values.append(randomized_result)
+# 	randomized_result = users[user].randomize(value)
+# 	reported_values.append(randomized_result)
 
-randomized_results = Random_Matrix_aggregator(reported_values, public_matrix, domain_size)
+# randomized_results = Random_Matrix_aggregator(reported_values, public_matrix, domain_size)
 
-print(true_results)
-print(randomized_results.round())
+# print(true_results)
+# print(randomized_results.round())

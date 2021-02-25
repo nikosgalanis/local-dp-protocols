@@ -1,8 +1,8 @@
-from LDP.RAPOR import *
-from LDP.Random_Matrix import *
-from LDP.Direct_Encoding import *
-from LDP.Unary_Encoding import *
-from LDP.Histogram_Encoding import *
+from RAPOR import *
+from Random_Matrix import *
+from Direct_Encoding import *
+from Unary_Encoding import *
+from Histogram_Encoding import *
 
 import pandas as pd
 import numpy as np
@@ -36,7 +36,7 @@ Optional Arguments (depending on the protocol used):
 """
 class Frequency_Estimator():
 	
-	def __init__(self, domain_size, method = '', epsilon = 1,
+	def __init__(self, domain_size, method = 'Direct_Encoding', epsilon = 1,
 				 p = 0.75, q = 0.25, public_matrix = None, m = 10, 
 				 f = 0.25, unary_optimized = True, threshold = 0.67, aggr_method = 'THE'):
 		# keep the initialization values of the class
@@ -53,8 +53,10 @@ class Frequency_Estimator():
 		if method == 'RAPPOR':
 			self.protocol_class = RAPOR(f, domain_size, p ,q)
 		elif method == 'Radnom_Matrix':
+    		# spectial case: if we are using random matrix we must provide a public matrix
+			# if it is not provided, create it on the fly using the appropriate function
 			if public_matrix == None:
-				self.public_matrix = generate_matrix(m, domain_size)
+				self.public_matrix = Random_Matrix.generate_matrix(m, domain_size)
 			self.protocol_class = Random_Matrix(public_matrix, m, domain_size, epsilon)
 		elif method == 'Direct_Encoding':
 			self.protocol_class = Direct_Encoding(epsilon, domain_size)
@@ -85,8 +87,8 @@ class Frequency_Estimator():
     	# create a dict with all the settings of a protocol, and pass it to the aggregator
 		# who chooses the ones that he wants	
 		config = {'reported_values': reported_values, 'f': self.f, 'd':self.domain_size,
-				  'public_matrix': public_matrix, 'epsilon': self.epsilon, 'threshold':self.threshold,
-			      'method': self.aggr_method}
+				  'public_matrix': self.public_matrix, 'epsilon': self.epsilon, 'threshold':self.threshold,
+			      'method': self.method}
 		# call the aggregation function of the relevant protocol
 		return self.protocol_class.aggregate(config)
 
@@ -118,7 +120,7 @@ class Frequency_Estimator():
 			user_instances.append(copy.copy(self.protocol_class))
 		
 		# vector to store the true sums for each value in the domain
-		true_results = np.zeros(domain_size)
+		true_results = np.zeros(self.domain_size)
 		
 		# list to store the results of each randomization, and to be fed to the aggregator
 		reported_values = []
@@ -138,6 +140,12 @@ class Frequency_Estimator():
 		randomised_results = self.aggregate(reported_values)
 
 		# return the tuple of the 2 vectors: the real sums, and the predicted, randomized sums
-		return (true_results, randomised_results)
+		return (true_results.astype(int), randomised_results.astype(int))
 
 
+estimator = Frequency_Estimator(130, method='Histogram_Encoding', epsilon=4, aggr_method='THE')
+
+res = estimator.test_protocol(input_file='../age.csv')
+
+print(res[0])
+print(res[1])
