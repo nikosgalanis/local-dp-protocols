@@ -19,7 +19,7 @@ class Histogram_Encoding():
 	
 	# perturbation consists of adding noise generated
 	# from the laplace distribution to each element
-	def perturbe(self, ret):
+	def perturb(self, ret):
 		B = ret
 		for i in range(len(B)):
 			B[i] += np.random.laplace(scale = (2/self.e))
@@ -28,7 +28,7 @@ class Histogram_Encoding():
 	
 	# randomization consists of perturbing the encoded value
 	def randomize(self, v):
-		return self.perturbe(self.encode(v))
+		return self.perturb(self.encode(v))
 	
 	def aggregate(self, config):
 

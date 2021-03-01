@@ -10,6 +10,7 @@ import random
 import math
 import numbers
 import copy
+import tqdm.notebook as tq
 
 # Base class for the frequency estimator
 """
@@ -88,7 +89,7 @@ class Frequency_Estimator():
 		# who chooses the ones that he wants	
 		config = {'reported_values': reported_values, 'f': self.f, 'd':self.domain_size,
 				  'public_matrix': self.public_matrix, 'epsilon': self.epsilon, 'threshold':self.threshold,
-			      'method': self.method}
+			      'method': self.method, 'p': self.p, 'q': self.q}
 		# call the aggregation function of the relevant protocol
 		return self.protocol_class.aggregate(config)
 
@@ -111,8 +112,8 @@ class Frequency_Estimator():
 			values = df.to_numpy()
 
 		# determine the number of users and values, based on the values' vector
-		user_count = len(df)
-		total_values = len(df)
+		user_count = max(df.iloc[:,0]) + 1
+		total_values = len(df.iloc[:,1]) + 1
 		# list to store the multiple instances of the user classes
 		user_instances = []
 		# fill up the list
@@ -125,9 +126,13 @@ class Frequency_Estimator():
 		# list to store the results of each randomization, and to be fed to the aggregator
 		reported_values = []
 
-		for user in range(user_count):
+		for i in tq.tqdm(range(len(df)), position=0, leave=True):
+    
 			# get the true value
-			value = int(values[user])
+			user = int(df.iloc[i, 0])
+			value = int(df.iloc[i, 1])
+
+			# value = int(values[user])
 			# the true sum of this value is increased
 			true_results[value] += 1
 			# call the randomization function in order to obtain the randomized value
@@ -143,9 +148,21 @@ class Frequency_Estimator():
 		return (true_results.astype(int), randomised_results.astype(int))
 
 
-estimator = Frequency_Estimator(130, method='Histogram_Encoding', epsilon=4, aggr_method='THE')
+estimator = Frequency_Estimator(80, method='Direct_Encoding', epsilon=4)
 
-res = estimator.test_protocol(input_file='../age.csv')
+res = estimator.test_protocol(input_file='../age_w_users.csv')
 
 print(res[0])
 print(res[1])
+
+import matplotlib.pyplot as plt
+
+xs = [i for i in range(80)]
+fig, axs = plt.subplots(2)
+fig.suptitle('Vertically stacked subplots')
+axs[0].bar(xs, res[0])
+axs[1].bar(xs, res[1])
+
+print("\n\n\n\n", np.linalg.norm(res[0]-res[1]))
+plt.show()
+
