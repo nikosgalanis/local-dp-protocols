@@ -16,6 +16,7 @@ generate_matrix(5, 10)
 
 class Random_Matrix_client():
 	def __init__(self, F, m, d, e):
+		# initialization of the protocol's constants
 		self.F = F
 		self.m = m
 		self.d = d
@@ -42,13 +43,23 @@ class Random_Matrix_client():
 		return (r, b * c * self.m * x)
 
 	def randomize(self, v):
-		return self.perturb(self.encode(v))
+		return self.perturbe(self.encode(v))
+
+
+
+class Random_Matrix_aggregator():
+	def __init__(self, F, m, d, e):
+		# initialization of the protocol's constants
+		self.F = F
+		self.m = m
+		self.d = d
+		self.e = e
 
 	def aggregate(self, config):
 		
 		reported_values = config['reported_values']
 		public_matrix = config['public_matrix']
-		d = config['d']
+		d = self.d
 
 		results = np.zeros(d)
 		for i in range(d):
@@ -58,7 +69,6 @@ class Random_Matrix_client():
 			
 			results[i] = sum_v
 		return results
-
 
 # user_count = 50000
 # domain_size = 10
@@ -70,7 +80,7 @@ class Random_Matrix_client():
 # users = []
 
 # for _ in range(user_count):
-# 	users.append(Random_Matrix_Client(public_matrix, m, domain_size, e))
+# 	users.append(Random_Matrix_client(public_matrix, m, domain_size, e))
 
 # true_results = np.zeros(domain_size)
 
@@ -83,7 +93,7 @@ class Random_Matrix_client():
 # 	randomized_result = users[user].randomize(value)
 # 	reported_values.append(randomized_result)
 
-# randomized_results = Random_Matrix_aggregator(reported_values, public_matrix, domain_size)
+# randomized_results = Random_Matrix_aggregator(reported_values, public_matrix, domain_size, e).aggregate({'reported_values': reported_values, 'public_matrix': public_matrix})
 
 # print(true_results)
 # print(randomized_results.round())

@@ -3,7 +3,7 @@ import random
 import math
 import numbers
 
-class Direct_Encoding():
+class Direct_Encoding_client():
 	def __init__(self, e, d):
 		# initialization of the protocol's constants
 		self.e = e
@@ -35,9 +35,19 @@ class Direct_Encoding():
 	# randomization consists of perturbing the encoded value
 	def randomize(self, v):
 		return self.perturbe(self.encode(v))
-	
+
+
+class Direct_Encoding_aggregator():
+	def __init__(self, e, d):
+		# initialization of the protocol's constants
+		self.e = e
+		self.d = d
+		# p and q are fixed, depending on the domain size and the epsilon value
+		self.p = math.exp(self.e) / (math.exp(self.e) + self.d - 1)
+		self.q = 1 / (math.exp(self.e) + self.d - 1)
+
 	def aggregate(self, config):
-		# define the needed variables from the configuration dict provided
+    		# define the needed variables from the configuration dict provided
 		reported_values = config['reported_values']
 		e = config['epsilon']
 		d = config['d']
@@ -65,7 +75,6 @@ class Direct_Encoding():
 				results[i] = 0
 
 		return results
-
 # import pandas as pd
 
 # df = pd.read_csv('../age.csv')

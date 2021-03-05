@@ -87,7 +87,8 @@ class RAPPOR_aggregator():
 		for i in range(d):
 			sum_v = 0
 			for j in reported_values:
-				sum_v += j[i]
+				if j[i] == 1:
+					sum_v += j[i]
 
 			results[i] = (sum_v - 0.5 * f * n) / (1 - f)
 		

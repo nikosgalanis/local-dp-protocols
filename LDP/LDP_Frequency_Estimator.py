@@ -38,10 +38,12 @@ Optional Arguments (depending on the protocol used):
 class Frequency_Estimator():
 	
 	def __init__(self, domain_size, method = 'Direct_Encoding', epsilon = 1,
-				 p = 0.75, q = 0.25, public_matrix = None, m = 10, 
-				 f = 0.25, unary_optimized = True, threshold = 0.67, aggr_method = 'THE'):
+				 p = 0.75, q = 0.25, public_matrix = None, m = 10, n_users = 1,
+				 f = 0.25, unary_optimized = True, threshold = 0.67, 
+				 aggr_method = 'THE'):
 		# keep the initialization values of the class
 		self.domain_size = domain_size
+		self.n_users = n_users
 		self.method = method
 		self.epsilon = epsilon
 		self.p = p
@@ -52,21 +54,33 @@ class Frequency_Estimator():
 		self.public_matrix = public_matrix
 		# according to the method, initialize the proper class with the mandatory arguments
 		if method == 'RAPPOR':
-			self.protocol_class = RAPOR(f, domain_size, p ,q)
-		elif method == 'Radnom_Matrix':
+			self.user_protocol_class = RAPPOR_client(f, domain_size, p ,q)
+			self.aggregator_protocol_class = RAPPOR_aggregator(f, domain_size, p ,q)
+		elif method == 'Random_Matrix':
     		# spectial case: if we are using random matrix we must provide a public matrix
 			# if it is not provided, create it on the fly using the appropriate function
 			if public_matrix == None:
-				self.public_matrix = Random_Matrix.generate_matrix(m, domain_size)
-			self.protocol_class = Random_Matrix(public_matrix, m, domain_size, epsilon)
+				self.public_matrix = generate_matrix(m, domain_size)
+			self.user_protocol_class = Random_Matrix_client(self.public_matrix, m, domain_size, epsilon)
+			self.aggregator_protocol_class = Random_Matrix_aggregator(public_matrix, m, domain_size, epsilon)
 		elif method == 'Direct_Encoding':
-			self.protocol_class = Direct_Encoding(epsilon, domain_size)
+			self.user_protocol_class = Direct_Encoding_client(epsilon, domain_size)
+			self.aggregator_protocol_class = Direct_Encoding_aggregator(epsilon, domain_size)
 		elif method == 'Histogram_Encoding':
-			self.protocol_class = Histogram_Encoding(epsilon, domain_size)
+			self.user_protocol_class = Histogram_Encoding_client(epsilon, domain_size)
+			self.aggregator_protocol_class = Histogram_Encoding_aggregator(epsilon, domain_size)
 		elif method == 'Unary_Encoding':
-			self.protocol_class = Unary_Encoding(epsilon, domain_size, unary_optimized, p, q)
+			self.user_protocol_class = Unary_Encoding_client(epsilon, domain_size, unary_optimized, p, q)
+			self.aggregator_protocol_class = Unary_Encoding_aggregator(epsilon, domain_size, unary_optimized, p, q)
 		else:
 			raise ValueError('Method not recognized. Choose one of the default ones')
+		
+		# create a list containing one instance for each user
+		self.users = []
+		for _ in range(self.n_users):
+			self.users.append(copy.copy(self.user_protocol_class))
+	
+	
 	"""
 	Randomization: The user provides a value v in the range (0, d-1), and according to the protocol chosen,
 	the system can return either a single value, or a vector containing the randomized values
@@ -76,8 +90,10 @@ class Frequency_Estimator():
 	"""
 	def randomize_value(self, v):
 		# just call the randomization function of the relevant protocol
-		return self.protocol_class.randomize(v)
+		return self.user_protocol_class.randomize(v)
 
+	
+	
 	"""
 	Aggregation: Used by the aggregator in order to combine all the users' data in order to produce the final
 	frequency vector, for each value in the domain.
@@ -91,9 +107,10 @@ class Frequency_Estimator():
 				  'public_matrix': self.public_matrix, 'epsilon': self.epsilon, 'threshold':self.threshold,
 			      'method': self.method, 'p': self.p, 'q': self.q}
 		# call the aggregation function of the relevant protocol
-		return self.protocol_class.aggregate(config)
+		return self.aggregator_protocol_class.aggregate(config)
 
 
+	
 	"""
 	Test an previously initialized protol. The function returns the true, and the randomizes
 	stats produced in 2 np vectors. Then, the user is free to compare the vectors using the
@@ -114,12 +131,11 @@ class Frequency_Estimator():
 		# determine the number of users and values, based on the values' vector
 		user_count = max(df.iloc[:,0]) + 1
 		total_values = len(df.iloc[:,1]) + 1
-		# list to store the multiple instances of the user classes
-		user_instances = []
-		# fill up the list
-		for _ in range(user_count):
-			user_instances.append(copy.copy(self.protocol_class))
-		
+		print("users ", user_count)
+		# check that the users are the same with the way that we initialized the class
+		if user_count != self.n_users:
+    			raise ValueError('Incorrect amount of users during initialization')
+
 		# vector to store the true sums for each value in the domain
 		true_results = np.zeros(self.domain_size)
 		
@@ -136,7 +152,7 @@ class Frequency_Estimator():
 			# the true sum of this value is increased
 			true_results[value] += 1
 			# call the randomization function in order to obtain the randomized value
-			randomised_result = user_instances[user].randomize(value)
+			randomised_result = self.users[user].randomize(value)
 			# and append it to the appropriate list
 			reported_values.append(randomised_result)
 
@@ -148,7 +164,7 @@ class Frequency_Estimator():
 		return (true_results.astype(int), randomised_results.astype(int))
 
 
-estimator = Frequency_Estimator(80, method='Direct_Encoding', epsilon=4)
+estimator = Frequency_Estimator(80, method='Unary_Encoding', epsilon=4, n_users=1000)
 
 res = estimator.test_protocol(input_file='../age_w_users.csv')
 
