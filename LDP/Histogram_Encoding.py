@@ -3,7 +3,7 @@ import random
 import math
 import numbers
 
-class Histogram_Encoding():
+class Histogram_Encoding_client():
 	def __init__(self, e, d):
 		# initialization of the protocol's constants
 		self.e = e
@@ -29,13 +29,20 @@ class Histogram_Encoding():
 	# randomization consists of perturbing the encoded value
 	def randomize(self, v):
 		return self.perturb(self.encode(v))
-	
+
+class Histogram_Encoding_aggregator():
+	def __init__(self, e, d):
+		# initialization of the protocol's constants
+		self.e = e
+		self.d = d
+			
 	def aggregate(self, config):
 
 		# define the needed variables from the configuration dict provided
 		reported_values = config['reported_values']
-		e = config['epsilon']
-		d = config['d']
+		e = self.e
+		d = self.d
+		
 		threshold = config['threshold']
 		method = config['method']
 

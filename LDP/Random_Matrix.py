@@ -14,7 +14,7 @@ def generate_matrix(m, d):
 	return F
 generate_matrix(5, 10)
 
-class Random_Matrix():
+class Random_Matrix_client():
 	def __init__(self, F, m, d, e):
 		self.F = F
 		self.m = m

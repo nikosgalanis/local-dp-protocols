@@ -1,4 +1,4 @@
-from RAPOR import *
+from RAPPOR import *
 from Random_Matrix import *
 from Direct_Encoding import *
 from Unary_Encoding import *

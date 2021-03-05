@@ -1,7 +1,7 @@
 import numpy as np
 import random
 
-class RAPOR():
+class RAPPOR_client():
 	# initialize the class with the necessary arguments: f and d(domain size)
 	def __init__(self, f, d, p, q):
 		self.f = f
@@ -67,22 +67,36 @@ class RAPOR():
 	def randomize(self, v):
 		return self.perturb(self.encode(v))
 
-	def aggregate(self, config):
 
-		reported_values = config['reported_values']	
-		f = config['f']	
-		d = config['d']	
+
+class RAPPOR_aggregator():
+    	# initialize the class with the necessary arguments: f and d(domain size)
+	def __init__(self, f, d, p, q):
+		self.f = f
+		self.d = d
+		self.p = p
+		self.q = q
 		
+	def aggregate(self, config):
+    
+		reported_values = config['reported_values']	
+		f = self.f	
+		d = self.d
+		n = len(reported_values)
 		results = np.zeros(d)
 		for i in range(d):
 			sum_v = 0
-			for j in reported_Bs:
+			for j in reported_values:
 				sum_v += j[i]
 
-			results[i] = (sum_v - 0.5 * f * len(reported_Bs)) / (1 - f)
+			results[i] = (sum_v - 0.5 * f * n) / (1 - f)
 		
 		return results
-
+	
+	def compute_metrics(self, true, randomized):
+		metrics_dict = {}
+		metrics_dict['eucledian_distance'] = np.linalg.norm(true - randomized)
+    
 # import pandas as pd
 
 # df = pd.read_csv('../age.csv')
