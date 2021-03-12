@@ -131,7 +131,6 @@ class Frequency_Estimator():
 		# determine the number of users and values, based on the values' vector
 		user_count = max(df.iloc[:,0]) + 1
 		total_values = len(df.iloc[:,1]) + 1
-		print("users ", user_count)
 		# check that the users are the same with the way that we initialized the class
 		if user_count != self.n_users:
     			raise ValueError('Incorrect amount of users during initialization')
