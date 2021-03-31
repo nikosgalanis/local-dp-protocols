@@ -4,12 +4,12 @@ import math
 import numbers
 
 class Direct_Distance_Encoding_client():
-	def __init__(self, e, d, threshold):
+	def __init__(self, e, d):
 		# initialization of the protocol's constants
 		self.e = e
 		self.d = d
-		self.theta = threshold
-		self.a = (threshold * (threshold + 1)) / (3 * threshold ** 2 - threshold + d - 1)
+		self.theta = math.floor((math.sqrt(4 * math.exp(self.e) + 1) - 1) / 2)
+		self.a = (self.theta * (self.theta + 1)) / (3 * self.theta ** 2 - self.theta + d - 1)
 
 		# self.p = (math.exp(self.e)) / (d ** 2 + math.exp(self.e) - 1)
 		# self.p = math.exp(self.e) / (math.exp(self.e) + (math.sqrt(d) + 1) * (math.sqrt(d) + math.sqrt(d + 1)))
@@ -57,14 +57,10 @@ class Direct_Distance_Encoding_client():
 
 
 class Direct_Distance_Encoding_aggregator():
-	def __init__(self, e, d, threshold):
+	def __init__(self, e, d):
     		# initialization of the protocol's constants
 		self.e = e
 		self.d = d
-		self.theta = threshold
-		# p and q are fixed, depending on the domain size and the epsilon value
-		self.p = math.exp(self.e) / (math.exp(self.e) + self.d - 1)
-		self.q = 1 / (math.exp(self.e) + self.d - 1)
 
 	def aggregate(self, config):
 		# define the needed variables from the configuration dict provided

@@ -68,8 +68,8 @@ class Frequency_Estimator():
 			self.user_protocol_class = Direct_Encoding_client(epsilon, domain_size)
 			self.aggregator_protocol_class = Direct_Encoding_aggregator(epsilon, domain_size)
 		elif method == 'Direct_Distance_Encoding':
-			self.user_protocol_class = Direct_Distance_Encoding_client(epsilon, domain_size, threshold)
-			self.aggregator_protocol_class = Direct_Distance_Encoding_aggregator(epsilon, domain_size, threshold)
+			self.user_protocol_class = Direct_Distance_Encoding_client(epsilon, domain_size)
+			self.aggregator_protocol_class = Direct_Distance_Encoding_aggregator(epsilon, domain_size)
 		
 		elif method == 'Histogram_Encoding':
 			self.user_protocol_class = Histogram_Encoding_client(epsilon, domain_size)
