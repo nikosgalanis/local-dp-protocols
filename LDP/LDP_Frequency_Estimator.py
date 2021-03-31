@@ -1,6 +1,7 @@
 from RAPPOR import *
 from Random_Matrix import *
 from Direct_Encoding import *
+from Direct_Distance_Encoding import *
 from Unary_Encoding import *
 from Histogram_Encoding import *
 
@@ -10,7 +11,7 @@ import random
 import math
 import numbers
 import copy
-import tqdm.notebook as tq
+import tqdm as tq
 
 # Base class for the frequency estimator
 """
@@ -66,6 +67,10 @@ class Frequency_Estimator():
 		elif method == 'Direct_Encoding':
 			self.user_protocol_class = Direct_Encoding_client(epsilon, domain_size)
 			self.aggregator_protocol_class = Direct_Encoding_aggregator(epsilon, domain_size)
+		elif method == 'Direct_Distance_Encoding':
+			self.user_protocol_class = Direct_Distance_Encoding_client(epsilon, domain_size, threshold)
+			self.aggregator_protocol_class = Direct_Distance_Encoding_aggregator(epsilon, domain_size, threshold)
+		
 		elif method == 'Histogram_Encoding':
 			self.user_protocol_class = Histogram_Encoding_client(epsilon, domain_size)
 			self.aggregator_protocol_class = Histogram_Encoding_aggregator(epsilon, domain_size)
@@ -120,7 +125,7 @@ class Frequency_Estimator():
 	All the other settings for the protocol are already defined, and thus this function is
 	able to use them.
 	"""
-	def test_protocol(self, input_file=None, values=None):
+	def test_protocol(self, count, input_file=None, values=None):
 		if input_file is None and values is None:
 			raise ValueError('An input file or a value vector must by given')
 		if input_file is not None:
@@ -131,6 +136,8 @@ class Frequency_Estimator():
 		# determine the number of users and values, based on the values' vector
 		user_count = max(df.iloc[:,0]) + 1
 		total_values = len(df.iloc[:,1]) + 1
+
+		df = df[:count]
 		# check that the users are the same with the way that we initialized the class
 		if user_count != self.n_users:
     			raise ValueError('Incorrect amount of users during initialization')
@@ -141,8 +148,8 @@ class Frequency_Estimator():
 		# list to store the results of each randomization, and to be fed to the aggregator
 		reported_values = []
 
-		for i in tq.tqdm(range(len(df)), position=0, leave=True):
-    
+		# for i in tq.tqdm(range(len(df)), position=0, leave=True):
+		for i in range(len(df)):
 			# get the true value
 			user = int(df.iloc[i, 0])
 			value = int(df.iloc[i, 1])
@@ -163,21 +170,93 @@ class Frequency_Estimator():
 		return (true_results.astype(int), randomised_results.astype(int))
 
 
-estimator = Frequency_Estimator(80, method='Unary_Encoding', epsilon=4, n_users=1000)
+import matplotlib.pyplot as plt
 
-res = estimator.test_protocol(input_file='../age_w_users.csv')
+# p = 0.6
+# d = 80
+
+# e = np.log((p * (d^2 - 1))/(1 - p))
+
+e = 1.5
+
+estimator = Frequency_Estimator(80, method='Direct_Encoding', epsilon=e, n_users=1000)
+
+res = estimator.test_protocol(100, input_file='../age_w_users.csv')
 
 print(res[0])
 print(res[1])
 
-import matplotlib.pyplot as plt
+print("\nsums\n\n", np.sum(res[0]), np.sum(res[1]), "\n\n")
+
+estimator = Frequency_Estimator(80, method='Direct_Distance_Encoding', epsilon=e, n_users=1000)
+
+res1 = estimator.test_protocol(100, input_file='../age_w_users.csv')
+
+print(res1[0])
+print(res1[1])
+
+print("\nsums\n\n", np.sum(res1[0]), np.sum(res1[1]), "\n\n")
 
 xs = [i for i in range(80)]
-fig, axs = plt.subplots(2)
+fig, axs = plt.subplots(3)
 fig.suptitle('Vertically stacked subplots')
 axs[0].bar(xs, res[0])
 axs[1].bar(xs, res[1])
+axs[2].bar(xs, res1[1])
 
-print("\n\n\n\n", np.linalg.norm(res[0]-res[1]))
+axs[0].set_ylim((0, 20))
+# axs[1].set_ylim((0, 20))
+axs[2].set_ylim((0, 20))
+
+axs[0].title.set_text('True Data')
+axs[1].title.set_text('Perturbed Data produced by the Direct Encoding Protocol')
+axs[2].title.set_text('Perturbed Data produced by our Protocol')
+
+
+
+print("\n\n\n\nDirect:", np.linalg.norm(res[0]-res[1]))
+print("\n\n\n\nDirect Distance:", np.linalg.norm(res1[0]-res1[1]))
+
+print(e)
 plt.show()
 
+
+
+# direct = []
+# dist_direct = []
+
+
+# x = [i for i in range(10, 3000, 10)]
+
+# p = 0.7
+# d = 80
+
+# e = np.log((p * (d^2 - 1))/(1 - p))
+
+# # for i in range(10, 10000, 10):
+# for i in tq.tqdm(range(10, 3000, 10), position=0, leave=True):
+
+# 	estimator = Frequency_Estimator(80, method='Direct_Encoding', epsilon=e, n_users=1000)
+# 	reses = []
+# 	for j in range(0, 20):
+# 		a = estimator.test_protocol(i, input_file='../age_w_users.csv')
+# 		reses.append(np.linalg.norm(a[0]-a[1]))
+# 	res = sum(reses) / len(reses) 
+
+# 	direct.append(res / i)
+
+# 	estimator = Frequency_Estimator(80, method='Direct_Distance_Encoding', epsilon=4, n_users=1000)
+
+# 	reses = []
+# 	for j in range(0, 20):
+# 		a = estimator.test_protocol(i, input_file='../age_w_users.csv')
+# 		reses.append(np.linalg.norm(a[0]-a[1]))
+
+# 	res1 = sum(reses) / len(reses)
+
+# 	dist_direct.append(res1 / i)
+
+# plt.plot(x, direct, 'r')
+# plt.plot(x, dist_direct, 'g')
+
+# plt.show()
