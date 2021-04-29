@@ -188,9 +188,9 @@ print(res[1])
 
 print("\nsums\n\n", np.sum(res[0]), np.sum(res[1]), "\n\n")
 
-estimator = Frequency_Estimator(80, method='Direct_Distance_Encoding', epsilon=e, n_users=1000)
+estimator = Frequency_Estimator(230319, method='Direct_Distance_Encoding', epsilon=e, n_users=1000)
 
-res1 = estimator.test_protocol(100, input_file='../age_w_users.csv')
+res1 = estimator.test_protocol(230319, input_file='../age_w_users.csv')
 
 print(res1[0])
 print(res1[1])

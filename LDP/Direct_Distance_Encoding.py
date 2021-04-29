@@ -45,9 +45,9 @@ class Direct_Distance_Encoding_client():
 		options = [i for i in range(self.d)]
 		# choose a value given the probabilities for each one
 		pert = random.choices(options, probabilities)[0]
-		if (x == 21):
-			print("sum is ", sum(probabilities))
-			print(probabilities)
+		# if (x == 21):
+			# print("sum is ", sum(probabilities))
+			# print(probabilities)
 
 		return pert
 
