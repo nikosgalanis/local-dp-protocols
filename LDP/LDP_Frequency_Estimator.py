@@ -1,7 +1,7 @@
 from RAPPOR import *
 from Random_Matrix import *
 from Direct_Encoding import *
-from Direct_Distance_Encoding import *
+from Distance_Sensitive_Encoding import *
 from Unary_Encoding import *
 from Histogram_Encoding import *
 
@@ -12,7 +12,7 @@ import math
 import numbers
 import copy
 import tqdm as tq
-
+import qif
 # Base class for the frequency estimator
 """
 Mandatory Arguments:
@@ -67,9 +67,9 @@ class Frequency_Estimator():
 		elif method == 'Direct_Encoding':
 			self.user_protocol_class = Direct_Encoding_client(epsilon, domain_size)
 			self.aggregator_protocol_class = Direct_Encoding_aggregator(epsilon, domain_size)
-		elif method == 'Direct_Distance_Encoding':
-			self.user_protocol_class = Direct_Distance_Encoding_client(epsilon, domain_size)
-			self.aggregator_protocol_class = Direct_Distance_Encoding_aggregator(epsilon, domain_size)
+		elif method == 'Distance_Sensitive_Encoding':
+			self.user_protocol_class = Distance_Sensitive_Encoding_client(epsilon, domain_size)
+			self.aggregator_protocol_class = Distance_Sensitive_Encoding_aggregator(epsilon, domain_size)
 		
 		elif method == 'Histogram_Encoding':
 			self.user_protocol_class = Histogram_Encoding_client(epsilon, domain_size)
@@ -177,86 +177,93 @@ import matplotlib.pyplot as plt
 
 # e = np.log((p * (d^2 - 1))/(1 - p))
 
-e = 1.5
+# e = 1.5
 
-estimator = Frequency_Estimator(80, method='Direct_Encoding', epsilon=e, n_users=1000)
+# estimator = Frequency_Estimator(80, method='Direct_Encoding', epsilon=e, n_users=1000)
 
-res = estimator.test_protocol(100, input_file='../age_w_users.csv')
+# res = estimator.test_protocol(100, input_file='../age_w_users.csv')
 
-print(res[0])
-print(res[1])
+# print(res[0])
+# print(res[1])
 
-print("\nsums\n\n", np.sum(res[0]), np.sum(res[1]), "\n\n")
+# print("\nsums\n\n", np.sum(res[0]), np.sum(res[1]), "\n\n")
 
-estimator = Frequency_Estimator(230319, method='Direct_Distance_Encoding', epsilon=e, n_users=1000)
+# estimator = Frequency_Estimator(80, method='Distance_Sensitive_Encoding', epsilon=e, n_users=1000)
 
-res1 = estimator.test_protocol(230319, input_file='../age_w_users.csv')
+# res1 = estimator.test_protocol(100, input_file='../age_w_users.csv')
 
-print(res1[0])
-print(res1[1])
+# print(res1[0])
+# print(res1[1])
 
-print("\nsums\n\n", np.sum(res1[0]), np.sum(res1[1]), "\n\n")
+# print("\nsums\n\n", np.sum(res1[0]), np.sum(res1[1]), "\n\n")
 
-xs = [i for i in range(80)]
-fig, axs = plt.subplots(3)
-fig.suptitle('Vertically stacked subplots')
-axs[0].bar(xs, res[0])
-axs[1].bar(xs, res[1])
-axs[2].bar(xs, res1[1])
+# xs = [i for i in range(80)]
+# fig, axs = plt.subplots(3)
+# fig.suptitle('Vertically stacked subplots')
+# axs[0].bar(xs, res[0])
+# axs[1].bar(xs, res[1])
+# axs[2].bar(xs, res1[1])
 
-axs[0].set_ylim((0, 20))
-# axs[1].set_ylim((0, 20))
-axs[2].set_ylim((0, 20))
+# axs[0].set_ylim((0, 20))
+# # axs[1].set_ylim((0, 20))
+# axs[2].set_ylim((0, 20))
 
-axs[0].title.set_text('True Data')
-axs[1].title.set_text('Perturbed Data produced by the Direct Encoding Protocol')
-axs[2].title.set_text('Perturbed Data produced by our Protocol')
+# axs[0].title.set_text('True Data')
+# axs[1].title.set_text('Perturbed Data produced by the Direct Encoding Protocol')
+# axs[2].title.set_text('Perturbed Data produced by our Protocol')
 
+# def euclid(x, y):                       # ground distance
+# 	return abs(x-y)
 
-
-print("\n\n\n\nDirect:", np.linalg.norm(res[0]-res[1]))
-print("\n\n\n\nDirect Distance:", np.linalg.norm(res1[0]-res1[1]))
-
-print(e)
-plt.show()
+# kant = qif.metric.kantorovich(euclid)   # distance on distributions
 
 
-
-# direct = []
-# dist_direct = []
-
-
-# x = [i for i in range(10, 3000, 10)]
-
-# p = 0.7
-# d = 80
-
-# e = np.log((p * (d^2 - 1))/(1 - p))
-
-# # for i in range(10, 10000, 10):
-# for i in tq.tqdm(range(10, 3000, 10), position=0, leave=True):
-
-# 	estimator = Frequency_Estimator(80, method='Direct_Encoding', epsilon=e, n_users=1000)
-# 	reses = []
-# 	for j in range(0, 20):
-# 		a = estimator.test_protocol(i, input_file='../age_w_users.csv')
-# 		reses.append(np.linalg.norm(a[0]-a[1]))
-# 	res = sum(reses) / len(reses) 
-
-# 	direct.append(res / i)
-
-# 	estimator = Frequency_Estimator(80, method='Direct_Distance_Encoding', epsilon=4, n_users=1000)
-
-# 	reses = []
-# 	for j in range(0, 20):
-# 		a = estimator.test_protocol(i, input_file='../age_w_users.csv')
-# 		reses.append(np.linalg.norm(a[0]-a[1]))
-
-# 	res1 = sum(reses) / len(reses)
-
-# 	dist_direct.append(res1 / i)
-
-# plt.plot(x, direct, 'r')
-# plt.plot(x, dist_direct, 'g')
+# print("\n\n\n\nDirect:", kant(res[0], res[1]))
+# print("\n\n\n\nDistance_Sensitive:", kant(res1[0], res1[1]))
 
 # plt.show()
+
+
+
+direct = []
+dist_direct = []
+
+
+x = [i for i in range(10, 3000, 10)]
+
+e = np.log(4)
+d = 80
+
+def euclid(x, y):                       # ground distance
+	return abs(x-y)
+
+kant = qif.metric.kantorovich(euclid)   # distance on distributions
+
+
+# for i in range(10, 10000, 10):
+for i in tq.tqdm(range(10, 3000, 10), position=0, leave=True):
+
+	estimator = Frequency_Estimator(80, method='Direct_Encoding', epsilon=e, n_users=1000)
+	reses = []
+	for j in range(0, 20):
+		a = estimator.test_protocol(i, input_file='../age_w_users.csv')
+		reses.append(kant(a[0], a[1]))
+	res = sum(reses) / len(reses) 
+
+	direct.append(res / i)
+
+	estimator = Frequency_Estimator(80, method='Distance_Sensitive_Encoding', epsilon=e, n_users=1000)
+
+	reses = []
+	for j in range(0, 20):
+		a = estimator.test_protocol(i, input_file='../age_w_users.csv')
+		reses.append(kant(a[0], a[1]))
+
+	res1 = sum(reses) / len(reses)
+
+	dist_direct.append(res1 / i)
+
+plt.plot(x, direct, 'r')
+plt.plot(x, dist_direct, 'g')
+
+plt.show()

@@ -11,12 +11,11 @@ theta = int(np.floor( theta_f ))
 a = theta * (theta + 1) / (3 * theta**2 - theta + d - 1)
 print()
 
-
-print("range ", [i for i in range(d + 1, trv + theta)])
 m = sum([a / (abs(i - trv) * (abs(i - trv) + 1)) - a / (theta * (theta + 1)) for i in range(trv - theta + 1, 0)])
-print([a / min(theta, abs(i - trv)) for i in range(-10, 10) if i != trv])
-print("m is ", m)
+values = [a / i - m / (d - 1) for i in range(1, theta)]
 
+print(values)
+print(values[0])
 
 def prob(i, x):
 	if i == x:
