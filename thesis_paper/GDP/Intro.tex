@@ -1,0 +1,34 @@
+\chapter{INTRODUCTION}
+
+\section{Need for Privacy}
+
+
+\par In our days, data is everywhere, including our smartphones, our computers our TVs, even our watches. Every device and nearly every website track down data, in order to provide more personalized services. This, of course, is desired by the users, as they are more likely to see relevant advertisements, and in general, have a more unique experience while they are using their devices.
+
+\par At the same time, the services that track down the data are also benefited, because of the way that science function: Experiments need to be made, thus the more available data in order to conduct them, the better. As an example, we might think the medical community: when someone logs-in to the hospital, it is beneficiary for the doctors to gather his data, in order to study his decease, and his potential recovery, not only for the shake of the patient, but also for the further study of his decease. 
+
+\par While providing data may seem inevitable and yet beneficiary for all parties, there is always a risk that this data will be used in order to compromise the user's privacy. When the information lands in the wrong hands, it can expose some characteristics of the user that he does not want to be shared. In our medical example, let's now consider a patient with a rare decease, who logs-in to a local hospital. He might consent to share his personal data (name, age etc.), but only for the doctors to use it. What will happen when the doctors give the data of the whole hospital for analysis? This patient, considering he is one of the few that has this illness, may be stigmatized,  when the data analysts find out his condition. Wouldn't it be better for him, if, let's say, his name was not exposed? We will see later on, why this approach, is found to be successful, but not enough, for extreme cases.
+
+\section{Definition of the problem of privacy}
+\par In general, when we consider the \textbf{problem of privacy}, we refer to the protection of the disclosure of sensitive information of individuals, when a collection of data about these individuals (dataset) is made publicly available.
+
+\subsection{Achieving Privacy via Anonymization}
+
+\par One of the first, and rather successful attempts for preserving privacy, was anonymization, meaning removing all personal identifiers from the dataset. This technique is further developed, using famous algorithms like k-anonymity, l-diversity etc. However, there are several problems with this approach. Firstly, there are very computational heavy, as their complexity rises up to an exponential one, making the anonymization of a large dataset very slow. Also, the anonymization does not guarantee that the user will remain private, if other datasets are not anonymized. Let's once again consider our example. Suppose our patient goes to two separate hospitals for his treatment, and one of them uses the best anonymization techniques, while the other one provides the data without any form of privacy. Our patient is on both of the datasets, thus the techniques used by the first hospital are now useless. This expands to the real world, because, no matter how careful you (and the services that you use) are, a single data breach is enough for you to be compromised. 
+
+\par So, right now, things seem a bit pessimistic, supposing that anonymization, no matter how well performed, can not fix our problem. An other successful technique, that is used on many other fields, is the addition of noise. Later on, we are going yo examine in which ways it can benefit us while trying to solve our problem.
+
+\subsection{Achieving Privacy via Randomization}
+
+Randomization can be applied to the data of the users in 2 different forms:
+\begin{itemize}
+    \item Apply random noise \textbf{directly to the data}. This will result to altered data, which will then be processed, so that the adversary will not be able to individualize the entries in the dataset.
+    \item Apply random noise to \textbf{queries asked to the dataset}. In that case, the dataset is not directly available to the analysts. Instead, they are allowed to ask questions to the dataset, and the answers are then being randomized, and returned.
+\end{itemize}
+
+Both of the above approaches are utilized, but the second one is widely preferred. During our explorations of data privacy, we are going to dive in both of those techniques, as well as the libraries that they are used in.
+
+\par As we can see, the randomization method looks good in theory, but we must answer to several questions before implementing it, such as: How can we define privacy for noisy queries? What type of noise do we need? We are going to answer those questions later on, during our next chapters. 
+
+\section{Goal of this thesis}
+It is made clear from our introduction, that the most effective up-to date method for applying privacy into a dataset, is via randomization. The method used, is called \textbf{Differential Privacy}, and is based on injecting noise into the users' data. The theory behind this method includes many mathematical theorems, thus, it can by easily explained. We will proceed by taking a look on those principles, and analysing the theory behind this form on data privacy. Then, we will proceed by examining some existing applications of D.P., especially some libraries that help us to apply this technique in a dataset. Finally, we are going to create our own library in order to apply Local D.P., a form of privacy that we will discuss in the next chapter. 

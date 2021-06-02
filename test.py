@@ -1,25 +1,31 @@
 import random
 import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
 
-numbers = [1,2,3,4,5,6]
+values = [10,23,43,54,23,19,34,95,23,129,34,2344,23,54,76,123,43,9,345,29,344,208,987,283,123,375,954,542,45,34,65,89,34,75,399,23,54,12,5,346,231,543,2362,46,234,23,48,78,78,34]
 
-weights = np.zeros(6)
-weights[0] = 10
-weights[1] = 20
-weights[2] = 30
-weights[3] = 20
-weights[4] = 10
-weights[5] = 10
+real_values = [100 * values[i] / sum(values) for i in range(len(values))]
+
+print(real_values)
+
+arr = np.zeros(len(values))
+options = [i for i in range(len(values))]
+
+ages = np.zeros(200000)
+
+for i in range(200000):
+	# choose a value given the probabilities for each one
+	pert = random.choices(options, real_values)[0]
+	arr[pert] += 1
+	ages[i] = int(pert)
+
+# print(sum(real_values))
+
+# df = pd.DataFrame(ages).astype(int)
+
+# df.to_csv("new_ages.csv" , index=False)
 
 
-
-res = np.zeros(6)
-
-for i in range(10000):
-    x = random.choices(numbers, weights)[0]
-    res[x - 1] += 1
-
-res /= 100
-
-print(sum(res))
-print(res)
+plt.bar(options, arr)
+plt.show()

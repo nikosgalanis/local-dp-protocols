@@ -172,41 +172,36 @@ class Frequency_Estimator():
 
 import matplotlib.pyplot as plt
 
-# p = 0.6
-# d = 80
+# e = np.log(10)
 
-# e = np.log((p * (d^2 - 1))/(1 - p))
+# estimator = Frequency_Estimator(50, method='Direct_Encoding', epsilon=e, n_users=1000)
 
-# e = 1.5
-
-# estimator = Frequency_Estimator(80, method='Direct_Encoding', epsilon=e, n_users=1000)
-
-# res = estimator.test_protocol(100, input_file='../age_w_users.csv')
+# res = estimator.test_protocol(1000, input_file='../res.csv')
 
 # print(res[0])
 # print(res[1])
 
 # print("\nsums\n\n", np.sum(res[0]), np.sum(res[1]), "\n\n")
 
-# estimator = Frequency_Estimator(80, method='Distance_Sensitive_Encoding', epsilon=e, n_users=1000)
+# estimator = Frequency_Estimator(50, method='Distance_Sensitive_Encoding', epsilon=e, n_users=1000)
 
-# res1 = estimator.test_protocol(100, input_file='../age_w_users.csv')
+# res1 = estimator.test_protocol(1000, input_file='../res.csv')
 
 # print(res1[0])
 # print(res1[1])
 
 # print("\nsums\n\n", np.sum(res1[0]), np.sum(res1[1]), "\n\n")
 
-# xs = [i for i in range(80)]
+# xs = [i for i in range(50)]
 # fig, axs = plt.subplots(3)
 # fig.suptitle('Vertically stacked subplots')
 # axs[0].bar(xs, res[0])
 # axs[1].bar(xs, res[1])
 # axs[2].bar(xs, res1[1])
 
-# axs[0].set_ylim((0, 20))
-# # axs[1].set_ylim((0, 20))
-# axs[2].set_ylim((0, 20))
+# # axs[0].set_ylim((0, 20))
+# axs[1].set_ylim((0, max(res[0])))
+# axs[2].set_ylim((0, max(res[0])))
 
 # axs[0].title.set_text('True Data')
 # axs[1].title.set_text('Perturbed Data produced by the Direct Encoding Protocol')
@@ -227,12 +222,14 @@ import matplotlib.pyplot as plt
 
 direct = []
 dist_direct = []
+dist_hist = []
 
+max_samples = 1000
 
-x = [i for i in range(10, 3000, 10)]
+x = [i for i in range(10, max_samples, 10)]
 
-e = np.log(4)
-d = 80
+e = np.log(12)
+d = 50
 
 def euclid(x, y):                       # ground distance
 	return abs(x-y)
@@ -241,29 +238,44 @@ kant = qif.metric.kantorovich(euclid)   # distance on distributions
 
 
 # for i in range(10, 10000, 10):
-for i in tq.tqdm(range(10, 3000, 10), position=0, leave=True):
+for i in tq.tqdm(range(10, max_samples, 10), position=0, leave=True):
 
-	estimator = Frequency_Estimator(80, method='Direct_Encoding', epsilon=e, n_users=1000)
+	estimator = Frequency_Estimator(50, method='Direct_Encoding', epsilon=e, n_users=1000)
 	reses = []
-	for j in range(0, 20):
-		a = estimator.test_protocol(i, input_file='../age_w_users.csv')
+	for j in range(0, 10):
+		a = estimator.test_protocol(i, input_file='../res.csv')
 		reses.append(kant(a[0], a[1]))
 	res = sum(reses) / len(reses) 
 
 	direct.append(res / i)
 
-	estimator = Frequency_Estimator(80, method='Distance_Sensitive_Encoding', epsilon=e, n_users=1000)
+	estimator = Frequency_Estimator(50, method='Distance_Sensitive_Encoding', epsilon=e, n_users=1000)
 
 	reses = []
-	for j in range(0, 20):
-		a = estimator.test_protocol(i, input_file='../age_w_users.csv')
+	for j in range(0, 10):
+		a = estimator.test_protocol(i, input_file='../res.csv')
 		reses.append(kant(a[0], a[1]))
 
 	res1 = sum(reses) / len(reses)
 
 	dist_direct.append(res1 / i)
 
-plt.plot(x, direct, 'r')
-plt.plot(x, dist_direct, 'g')
+	estimator = Frequency_Estimator(50, method='Histogram_Encoding', epsilon=e, n_users=1000)
 
+	reses = []
+	for j in range(0, 10):
+		a = estimator.test_protocol(i, input_file='../res.csv')
+		reses.append(kant(a[0], a[1]))
+
+	res2 = sum(reses) / len(reses)
+
+	dist_hist.append(res2 / i)
+
+plt.plot(x, direct, 'r')
+plt.plot(x, dist_hist, 'g')
+plt.plot(x, dist_direct, 'b')
+
+
+plt.legend(["Direct Encoding", "Histogram Encoding", "Distance Sensitive Encoding"])
 plt.show()
+plt.savefig('../misc/latest_plot.png')
