@@ -98,37 +98,3 @@ class RAPPOR_aggregator():
 		metrics_dict = {}
 		metrics_dict['eucledian_distance'] = np.linalg.norm(true - randomized)
     
-# import pandas as pd
-
-# df = pd.read_csv('../age.csv')
-
-# ages = df.to_numpy()
-
-
-# user_count = len(df)
-# domain_size = 130
-# total_values = len(df)
-
-# f = 0.5
-# p = 0.75
-# q = 0.25
-
-# users = []
-# for _ in range(user_count):
-# 	users.append(RAPOR(f, domain_size, p, q))
-
-# true_results = np.zeros(domain_size)
-
-# reported_Bs = []
-# for user in range(user_count):
-# 	value = int(ages[user])
-# 	true_results[value] += 1
-
-# 	randomised_result = users[user].randomize(value)
-# 	reported_Bs.append(randomised_result)
-
-
-# randomised_results = users[1].aggregate(reported_Bs, f, domain_size)
-
-# print(true_results.astype(int))
-# print(randomised_results)

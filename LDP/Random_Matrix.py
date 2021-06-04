@@ -69,31 +69,3 @@ class Random_Matrix_aggregator():
 			
 			results[i] = sum_v
 		return results
-
-# user_count = 50000
-# domain_size = 10
-# m = 100
-# e = 0.7
-
-# public_matrix = generate_matrix(m , domain_size)
-
-# users = []
-
-# for _ in range(user_count):
-# 	users.append(Random_Matrix_client(public_matrix, m, domain_size, e))
-
-# true_results = np.zeros(domain_size)
-
-# reported_values = []
-
-# for user in range(user_count):
-# 	value = random.randint(0, domain_size - 1)
-# 	true_results[value] += 1
-
-# 	randomized_result = users[user].randomize(value)
-# 	reported_values.append(randomized_result)
-
-# randomized_results = Random_Matrix_aggregator(reported_values, public_matrix, domain_size, e).aggregate({'reported_values': reported_values, 'public_matrix': public_matrix})
-
-# print(true_results)
-# print(randomized_results.round())
