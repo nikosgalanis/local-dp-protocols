@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import qif
 
-eps = np.log(6)
+eps = np.log(20)
 d = 89               # domain size
 trv = 3              # true value
 theta_f = (np.sqrt( 4 * np.exp(eps) + 1) - 1) / 2

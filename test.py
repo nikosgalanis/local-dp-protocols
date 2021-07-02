@@ -30,4 +30,4 @@ import pandas as pd
 # plt.bar(options, arr)
 # plt.show()
 
-print([i for i in range(0,10)])
+print([i for i in range(10)])

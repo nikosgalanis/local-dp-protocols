@@ -227,11 +227,11 @@ else:
 	dist_direct = []
 	dist_hist = []
 
-	max_samples = 1000
+	max_samples = 500
 
 	x = [i for i in range(10, max_samples, 10)]
 
-	e = np.log(12)
+	e = np.log(20)
 	d = 50
 
 	def euclid(x, y):                       # ground distance
