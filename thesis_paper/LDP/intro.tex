@@ -1,0 +1,48 @@
+\chapter{A LIBRARY FOR LOCAL DIFFERENTIAL PRIVACY}
+
+\section{Introduction in Local DP}
+
+As we mentioned in previous chapters, there are two major forms of Differential Privacy. Having analyzed and tested the first one, \textbf{Global D.P.}, it is now time to examine \textbf{Local D.P.}, by explaining some possible protocols, as well as building our own.
+
+
+In Local D.P., there is a significant difference compared to Global DP: there is \textbf{no trusted curator} between the data and the users, as they just want to send their data, while already being anonymized. Thus, an algorithm must perturb the data before sending it to the untrusted curator, who will then transmit them to the analysts. 
+
+In order to achieve that goal, the user must randomize the value before making it public (i.e. sending it to the untrusted curator). Then, the curator which collects the data (we will reference to him as aggregator moving forward), collects the data and tries to retrieve their original values, with a goal of producing the most accurate results possible. 
+
+Thus, each LDP algorithm has the following steps:
+
+\begin{itemize}
+    \item Each user encodes, and then perturbs the private value that he wants to make public
+    \item Each user sends out the result of the perturbation process, with that being only the final value, as he keeps the intermediate of the results for himself
+    \item The untrusted data curator collects each user's value, and implements some kind of aggregation in order to retrieve the stats that he wants from the data given to him.
+\end{itemize}
+
+In comparison with Global D.P., the Local model has advantages, as well as disadvantages. 
+Its main advantages are:
+\begin{itemize}
+    \item The user is not forced to trust the data curator, as only the perturbed value is reported
+    \item Simpler implementation of the algorithms, due to the district steps taken by both sides.
+\end{itemize}
+
+while the main disadvantages are the following:
+
+\begin{itemize}
+    \item The noise added should be larger than the Global model, in order to satisfy the definition, thus the number of people in the dataset should be significant for accurate results to be produced.
+    \item Because this is not always possible, many real-world applications use extremely high values of epsilon compared to what we got used to during our testing in the Global models.
+\end{itemize}
+
+During this Thesis, concern was raised for the main disadvantage of L.D.P., and thus\textbf{ we will present a new protocol aiming to reduce the need of many users, while still covering the definition.} However, the definition for L.D.P. is quite different than the Global model one's.
+
+\section{Definition of Local DP}
+
+Having a general idea in how Local D.P. functions, it is no time to give a strict definition that we are going to depend our work on moving forward.
+
+We can say that an algorithm $A$ satisfies ε-Local Differential Privacy, if and only if for any input $v_1$, $v_2$, we have
+
+$$ \forall y \in Range(A):\ Pr[A(v_1) = y] \leq e^{\epsilon} * Pr[A(v_2) = y] $$
+
+where $Range(A)$ denotes the set of all possible outputs of the algorithm $A$.
+
+As mentioned in Chapter 2, this definition can have many interpretations by different algorithms or protocols, but each one must produce a probabilistic space whose elements must satisfy the above equation.
+
+

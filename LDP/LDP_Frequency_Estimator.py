@@ -172,14 +172,15 @@ class Frequency_Estimator():
 
 import matplotlib.pyplot as plt
 
-e = np.log(6)
 
 res = input("Method: [i]: instance | [r]: full run\n\n")
+max_samples = 500
+e = np.log(12)
 
 if (res == 'i'):
 	estimator = Frequency_Estimator(50, method='Direct_Encoding', epsilon=e, n_users=1000)
 
-	res = estimator.test_protocol(10000, input_file='../res.csv')
+	res = estimator.test_protocol(max_samples, input_file='../res.csv')
 
 	print(res[0])
 	print(res[1])
@@ -188,7 +189,7 @@ if (res == 'i'):
 
 	estimator = Frequency_Estimator(50, method='Distance_Sensitive_Encoding', epsilon=e, n_users=1000)
 
-	res1 = estimator.test_protocol(10000, input_file='../res.csv')
+	res1 = estimator.test_protocol(max_samples, input_file='../res.csv')
 
 	print(res1[0])
 	print(res1[1])
@@ -227,11 +228,9 @@ else:
 	dist_direct = []
 	dist_hist = []
 
-	max_samples = 500
 
 	x = [i for i in range(10, max_samples, 10)]
 
-	e = np.log(20)
 	d = 50
 
 	def euclid(x, y):                       # ground distance
@@ -248,7 +247,7 @@ else:
 		for j in range(0, 10):
 			a = estimator.test_protocol(i, input_file='../res.csv')
 			reses.append(kant(a[0], a[1]))
-		res = sum(reses) / len(reses) 
+		res = sum(reses)  
 
 		direct.append(res / i)
 
@@ -259,7 +258,7 @@ else:
 			a = estimator.test_protocol(i, input_file='../res.csv')
 			reses.append(kant(a[0], a[1]))
 
-		res1 = sum(reses) / len(reses)
+		res1 = sum(reses)
 
 		dist_direct.append(res1 / i)
 
@@ -270,7 +269,7 @@ else:
 			a = estimator.test_protocol(i, input_file='../res.csv')
 			reses.append(kant(a[0], a[1]))
 
-		res2 = sum(reses) / len(reses)
+		res2 = sum(reses)
 
 		dist_hist.append(res2 / i)
 

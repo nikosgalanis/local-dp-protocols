@@ -1,0 +1,26 @@
+\section{Simple Application of LDP}
+
+The most simple of L.D.P. protocols is already mentioned in this Thesis, and is no other than the \textbf{Randomized Response} protocol. This algorithm implements the three steps mentioned in the introduction, as the user chooses a value (True or False), perturbs it(by the flipping of the coins), reports the perturbed value, with the sole job of the aggregator being to collect, normalize and report the values provided.
+
+
+\section{Existing Protocols for Local DP}
+
+Apart from R.R., many L.D.P. protocols have been implemented during the years, with many of them being widely used by companies in order to protect users' data. One of the most famous protocols is \textbf{RAPPOR}, created by Google, and being currently used in the Chrome browser in order for the company to provide useful info to its users without compromising their privacy. Also, Apple has created ts own protocol of L.D.P., and utilizes it in its products. 
+
+However, we are not going to focus on those protocols moving forward, than the ones presented in [TODO: Insert cite], a paper which introduces many algorithms for L.D.P., each one with different perturbation techniques and suitable for different circumstances.
+
+During this chapter we are going to give a definition of each algorithm, implement it using Python, and compare the accuracy results produced by those protocols, just like during our testings of the G.D.P. models. Each protocols has two parts: the \textbf{users} and the \textbf{aggregator}. For the users we must each time define the following functions:
+
+\begin{itemize}
+    \item $Encode()$: Encodes the true value that the user wants to report
+    \item $Perturb()$: Perturbs the encoded value, in order to produce the random value that will be reported
+\end{itemize}
+
+For the aggregator we must each time define the  $Aggregate()$ function, that collects the reported random values of the users, and produces the results according to the model.
+
+\subsection{Basic RAPPOR}
+As mentioned earlier, RAPPOR is a protocol created by Google. Its simpler form, Basic RAPPOR is used in Chrome, where it collects answers to questions such as the user's home page. The protocol's functions are the following:
+
+\textbf{Encoding:} $Encode(v) = A_0$, where $A_0$ is a d-bit vector, such that: $A_0[v] = 1$ and $A_0[i] = 1$ for every other i. 
+
+\textbf{Perturbation:} The perturbation consists of 2 steps: the permanent and the instantaneous. The permanent one is carried out only one time, and is the following: $Perturb(A_0)$ = 
