@@ -13,6 +13,10 @@ import numbers
 import copy
 import tqdm as tq
 import qif
+
+def manhattan_distance(a, b):
+    return np.abs(a - b).sum()
+
 # Base class for the frequency estimator
 """
 Mandatory Arguments:
@@ -140,6 +144,7 @@ class Frequency_Estimator():
 		df = df[:count]
 		# check that the users are the same with the way that we initialized the class
 		if user_count != self.n_users:
+    			print("---" + str(user_count) + " " + str(self.n_users))
     			raise ValueError('Incorrect amount of users during initialization')
 
 		# vector to store the true sums for each value in the domain
@@ -174,7 +179,7 @@ import matplotlib.pyplot as plt
 
 
 res = input("Method: [i]: instance | [r]: full run\n\n")
-max_samples = 500
+max_samples = -1
 e = np.log(12)
 
 if (res == 'i'):
@@ -197,19 +202,23 @@ if (res == 'i'):
 	print("\nsums\n\n", np.sum(res1[0]), np.sum(res1[1]), "\n\n")
 
 	xs = [i for i in range(50)]
-	fig, axs = plt.subplots(3)
-	fig.suptitle('Vertically stacked subplots')
-	axs[0].bar(xs, res[0])
-	axs[1].bar(xs, res[1])
-	axs[2].bar(xs, res1[1])
+	# fig, axs = plt.subplots(3)
+	# fig.suptitle('Vertically stacked subplots')
+	# axs[0].bar(xs, res[0])
+	# axs[1].bar(xs, res[1])
+	# axs[2].bar(xs, res1[1])
 
-	# axs[0].set_ylim((0, 20))
-	axs[1].set_ylim((0, max(res[0])))
-	axs[2].set_ylim((0, max(res[0])))
+	# # axs[0].set_ylim((0, 20))
+	# axs[1].set_ylim((0, max(res[0])))
+	# axs[2].set_ylim((0, max(res[0])))
 
-	axs[0].title.set_text('True Data')
-	axs[1].title.set_text('Perturbed Data produced by the Direct Encoding Protocol')
-	axs[2].title.set_text('Perturbed Data produced by our Protocol')
+	# axs[0].title.set_text('True Data')
+	# axs[1].title.set_text('Perturbed Data produced by the Direct Encoding Protocol')
+	# axs[2].title.set_text('Perturbed Data produced by our Protocol')
+
+	plt.bar(xs, res[0])
+	plt.xlabel("Possible answers")
+	plt.show()
 
 	def euclid(x, y):                       # ground distance
 		return abs(x-y)
@@ -225,11 +234,17 @@ if (res == 'i'):
 else:
 
 	direct = []
-	dist_direct = []
+	rappor = []
 	dist_hist = []
+	unary = []
+	randmatr = []
+	size = 20000
 
+	epsilon = [round(i/3 + 0.2, 2) for i in range (0,12)]
+	max_samples = 10000
+	
+	x = [i for i in range(10, max_samples, 200)]
 
-	x = [i for i in range(10, max_samples, 10)]
 
 	d = 50
 
@@ -238,46 +253,74 @@ else:
 
 	kant = qif.metric.kantorovich(euclid)   # distance on distributions
 
-
+	e = 1.5
 	# for i in range(10, 10000, 10):
-	for i in tq.tqdm(range(10, max_samples, 10), position=0, leave=True):
+	for i in tq.tqdm(x, position=0, leave=True):
 
 		estimator = Frequency_Estimator(50, method='Direct_Encoding', epsilon=e, n_users=1000)
 		reses = []
 		for j in range(0, 10):
 			a = estimator.test_protocol(i, input_file='../res.csv')
-			reses.append(kant(a[0], a[1]))
-		res = sum(reses)  
+			reses.append(manhattan_distance(a[0], a[1]))
+		res = sum(reses) / i *10  
 
-		direct.append(res / i)
+		direct.append(res)
 
-		estimator = Frequency_Estimator(50, method='Distance_Sensitive_Encoding', epsilon=e, n_users=1000)
+		# estimator = Frequency_Estimator(50, method='RAPPOR', n_users=1000)
 
-		reses = []
-		for j in range(0, 10):
-			a = estimator.test_protocol(i, input_file='../res.csv')
-			reses.append(kant(a[0], a[1]))
+		# reses = []
+		# for j in range(0, 1):
+		# 	a = estimator.test_protocol(size, input_file='../res.csv')
+		# 	reses.append(manhattan_distance(a[0], a[1]))
 
-		res1 = sum(reses)
+		# res1 = sum(reses) / 1
 
-		dist_direct.append(res1 / i)
+		# rappor.append(res1)
 
 		estimator = Frequency_Estimator(50, method='Histogram_Encoding', epsilon=e, n_users=1000)
 
 		reses = []
 		for j in range(0, 10):
 			a = estimator.test_protocol(i, input_file='../res.csv')
-			reses.append(kant(a[0], a[1]))
+			reses.append(manhattan_distance(a[0], a[1]))
 
-		res2 = sum(reses)
+		res2 = sum(reses) / i *10
 
-		dist_hist.append(res2 / i)
+		dist_hist.append(res2)
+
+		q = 1 / (math.exp(e) + 1)
+		
+		
+		estimator = Frequency_Estimator(50, method='Unary_Encoding', epsilon=e, p=1/2, q=q, n_users=1000)
+	
+		reses = []
+		for j in range(0, 10):
+			a = estimator.test_protocol(i, input_file='../res.csv')
+			reses.append(manhattan_distance(a[0], a[1]))
+
+		res3 = sum(reses) / i * 10
+
+		unary.append(res3)
+
+		estimator = Frequency_Estimator(50, method='Random_Matrix', n_users=1000)
+	
+		reses = []
+		for j in range(0, 10):
+			a = estimator.test_protocol(i, input_file='../res.csv')
+			reses.append(manhattan_distance(a[0], a[1]))
+
+		res4 = sum(reses) / i *10
+
+		randmatr.append(res4)
 
 	plt.plot(x, direct, 'r')
 	plt.plot(x, dist_hist, 'g')
-	plt.plot(x, dist_direct, 'b')
+	# plt.plot(epsilon, rappor, 'b')
+	plt.plot(x, unary, 'm')
+	plt.plot(x, randmatr, 'y')
+	plt.xlabel("Number of users")
+	plt.ylabel("Accuracy Error")
 
-
-	plt.legend(["Direct Encoding", "Histogram Encoding", "Distance Sensitive Encoding"])
+	plt.legend(["Direct Encoding", "Histogram Encoding", "Unary Encoding", "Random Matrix"])
 	plt.savefig('../misc/latest_plot.png')
 	plt.show()

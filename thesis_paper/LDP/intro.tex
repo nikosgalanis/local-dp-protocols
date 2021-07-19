@@ -46,3 +46,34 @@ where $Range(A)$ denotes the set of all possible outputs of the algorithm $A$.
 As mentioned in Chapter 2, this definition can have many interpretations by different algorithms or protocols, but each one must produce a probabilistic space whose elements must satisfy the above equation.
 
 
+\section{Simple Application of LDP}
+
+The most simple of L.D.P. protocols is already mentioned in this Thesis, and is no other than the \textbf{Randomized Response} protocol. This algorithm implements the three steps mentioned in the introduction, as the user chooses a value (Yes or No), perturbs it(by the flipping of the coins), reports the perturbed value, with the sole job of the aggregator being to collect, normalize and report the values provided. It meets the definition of L.D.P., as the fraction of a pair of probabilities in the space of possible outputs (Yes, No) has always the ceiling of a real number. 
+
+Our goal is to now find this ceiling, and thus denote the level of privacy that randomized response offers. In order to do this, we are going to select the possibility of the user having chose the answer "Yes". A simple case analysis shows that $Pr[Yes | Truth] = \frac{3}{4}$, and of course $Pr[Yes | False] = \frac{1}{4}$. Thus, by the definition of L.D.P., we have 
+
+\begin{align*}
+    \frac{Pr[Yes | Truth]}{Pr[Yes | False]} = \frac{\frac{3}{4}}{\frac{1}{4}} = 3 = e^\epsilon \Longleftrightarrow \epsilon = ln(3)
+\end{align*}
+
+Thus, R.R. offers  $ln(3)$-differential privacy to its users. This is quite a good setting, but the restriction is that the user can only report 2 values, something not suitable for modern problems and surveys. 
+
+However, having implemented R.R. in Python, we can now display the accuracy error of R.R. as the number of users rises.
+
+In R.R., we care about the total true answers of the users, and not the individual responses. Thus the metric we are going to use is the absolute difference of the sum of the 2 vectors: the one with the truthful answers, and the one with the reported answers. We are going to divide this result with the number of the users, in order to get the scale of the error depending on the size of the vector that was reported. The metric is expressed from the following function:
+
+\begin{align*}
+    Error = \frac{abs(sum(true\_values) - sum(reported\_values)) }{number\ of \ users}
+\end{align*}
+
+As always, during the creation of probabilistic distributions, one run is not enough, because of the extreme amount of noise that can occur. Thus, for each number of users we are going to run the R.R. protocol 100 times, and the final accuracy error will be produced by the mean value of those runs.
+
+The results of the testings are shown bellow in the \textbf{Figure 4.1}.
+
+\begin{figure}[!htb]\centering
+    \includegraphics[width=0.8\textwidth]{images/rr_results.png}
+    \caption{Accuracy Error in R.R for increasing values of epsilon}
+\end{figure}
+
+
+We observe that the plot behaves as expected: the protocol produces a logarithmic curve for the accuracy error, while for a large number of users(over 3000), the error stabilizes bellow $0.1$. 

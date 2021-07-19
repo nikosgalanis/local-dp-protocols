@@ -1,11 +1,8 @@
-\section{Simple Application of LDP}
-
-The most simple of L.D.P. protocols is already mentioned in this Thesis, and is no other than the \textbf{Randomized Response} protocol. This algorithm implements the three steps mentioned in the introduction, as the user chooses a value (True or False), perturbs it(by the flipping of the coins), reports the perturbed value, with the sole job of the aggregator being to collect, normalize and report the values provided.
 
 
 \section{Existing Protocols for Local DP}
 
-Apart from R.R., many L.D.P. protocols have been implemented during the years, with many of them being widely used by companies in order to protect users' data. One of the most famous protocols is \textbf{RAPPOR}, created by Google, and being currently used in the Chrome browser in order for the company to provide useful info to its users without compromising their privacy. Also, Apple has created ts own protocol of L.D.P., and utilizes it in its products. 
+Apart from R.R., many L.D.P. protocols have been implemented during the years, with many of them being widely used by companies in order to protect users' data. One of the most famous protocols is \textbf{RAPPOR}, created by Google, and being currently used in the Chrome browser for the company to provide useful info to its users without compromising their privacy. Also, Apple has created ts own protocol of L.D.P., and utilizes it in its products. 
 
 However, we are not going to focus on those protocols moving forward, than the ones presented in [TODO: Insert cite], a paper which introduces many algorithms for L.D.P., each one with different perturbation techniques and suitable for different circumstances.
 
@@ -23,4 +20,216 @@ As mentioned earlier, RAPPOR is a protocol created by Google. Its simpler form, 
 
 \textbf{Encoding:} $Encode(v) = A_0$, where $A_0$ is a d-bit vector, such that: $A_0[v] = 1$ and $A_0[i] = 1$ for every other i. 
 
-\textbf{Perturbation:} The perturbation consists of 2 steps: the permanent and the instantaneous. The permanent one is carried out only one time, and is the following: $Perturb(A_0)$ = 
+\textbf{Perturbation:} The perturbation consists of 2 steps: the permanent and the instantaneous. The permanent one is carried out only one time, and is the following: 
+
+\begin{equation*}
+    Pr[A_1[i] = 1] =
+	\begin{cases}
+		1 - \frac{1}{2}f & \mbox{if } A_0[i]=1 \\
+		\frac{1}{2}f & \mbox{ otherwise}
+			\end{cases}
+\end{equation*}
+
+The instantaneous step is carried out every time a user reports a value, and is defined as:
+
+\begin{equation*}
+    Pr[A_2[i] = 1] =
+	\begin{cases}
+		p & \mbox{if } A_1[i]=1 \\
+		q & \mbox{ otherwise}
+			\end{cases}
+\end{equation*}
+
+We observe from the above functions, that the user must define the $f, p $ and $q$ parameters. Google suggests that we set $f = \frac{1}{2}$ or $\frac{1}{4}$, and $p = 0.75$, thus $q = 0.25$. During our testings, those exact parameters were used. 
+
+
+\subsection{Random Matrix Projection}
+In [TODO: 14], a protocol with a random matrix projection is proposed, introducing an additional setup step.
+
+\textbf{Setup:} A random and uniform matrix is generated before any encoding, with it being public and drawn as: $\Phi \in \{-\frac{1}{m}, \frac{1}{m}\}^{m \times d}$, where $m$ and $d$ are user defined. In our testings, we opt to set $m = 5$ and $d = 10$.
+
+\textbf{Encoding:} When it comes down to encoding, the function used is the following: $Encoding = (r,x)$, where $r$ is uniformly randomly selected from the range of m, and $x$ is the v-th element of the r-row of the random matrix.
+
+\textbf{Perturbation}: The perturbation function is defined as following: $Perturb(r,x) = (r, b\cdot c \cdot m \cdot x$, where 
+
+\begin{equation*}
+    b =
+	\begin{cases}
+		1 & \mbox{with } p = \frac{e^\epsilon}{e^\epsilon + 1} \\
+		-1 & \mbox{with } q = \frac{1}{e^\epsilon + 1}			
+	\end{cases}
+\end{equation*}
+and $c = \frac{e^\epsilon +1}{e^\epsilon -1}$
+
+\textbf{Aggregation:} Given all the tuples reported by $j$ users in the form $(r, y)$, the estimation for the i-th value of the dataset, is produced by $\sum_{j} y^j \cdot \Phi[r^j,i]$.
+
+\subsection{Pure Protocols}
+
+The following protocols are presented by the [TODO: cite] paper, and are called "pure" protocols, because of the way they aggregate the data produced by the user. For each one of them, we should define a $Support()$ function, that indicates for each value of the possible outcomes, the reported values that are supported. Thus, with the notation $\sum_{j} Support(y^j)$, we mean the sum of all the supported values of the y-th element of the dataset.
+
+Also, for a protocol to be pure, two probabilities must be defined, $p^*$ and $q^*$, where the first notes the probability that the true value is supported by an element $y$, and the second one the probability of another value is supported by the element $y$. The protocol is pure if and only if $p^* > q^*$.
+
+If a protocol is pure, the estimation of the total reported values for an element of the dataset $i$, is the following:
+
+\begin{align}
+    Estimation = \frac{\sum_{j} 1_{support(y^j)}(i) - nq*}{p^* - q^*}
+\end{align}
+where j denotes the j-th user reporting their value, and n the total size of the vector of the reported values.
+
+
+\subsubsection{Direct Encoding}
+
+This protocol is the natural method of extending the Randomized Response, without the limitation of 2 possible answers. 
+
+\textbf{Encoding:} The protocol does not feature an encoding procedure, thus 
+
+\begin{align*}
+    Encode(v) = v
+\end{align*}
+
+\textbf{Perturbation:} The perturbation is based on the epsilon setting given by the user, and its function is defined as following:
+
+\begin{equation*}
+    Pr[Perturb(x) = i] =
+	\begin{cases}
+    	p = \frac{e^\epsilon}{e^\epsilon + d - 1} & \mbox{if } i = x \\
+    	q = \frac{1}{e^\epsilon + d - 1} & \mbox{if } i \neq x 
+	\end{cases}
+\end{equation*}
+
+where $d$ the size of the dataset of the possible answers, $x$ the true value and $i$ the value selected.
+
+\textbf{Aggregation:} The protocol is pure with $p^* = p$, $q^* = q$ and $Support(i) = i$, thus the predicted results for each of the dataset's values can be calculated from the Equation 4.1.
+
+We observe that this protocol strongly depends on the size of the dataset of the possible answers, thus when the dataset sizes increases, the protocol becomes less accurate, due to the decreased probability of selecting the truth. Moreover, for the D.E. protocol, all the false values have the same probability to get chosen, a rather disturbing detail for a query such as a person's age. We will return to these thoughts on later sections.
+
+\subsubsection{Histogram Encoding}
+
+An other protocol presented is Histogram Encoding, where an input when having $d$ options is encoded as a $d$-length vector.
+
+\textbf{Encoding:} The encoding function is for the protocol is
+
+\begin{align*}
+    Encoding(v) = [0, 0, \dots, 1, \dots, 0]
+\end{align*}
+
+where only the v-th element of the vector is equal to 1.
+
+\textbf{Perturbation:} The result of perturbing the encoded vector, is a new vector $B'$, s.t.: 
+
+\begin{align*}
+    B'[i] = B[i] + Lap(\frac{2}{\epsilon})
+\end{align*}
+where $Lap()$ denotes the noise drawn from the Laplace distribution, where
+
+
+\begin{align*}
+    Pr[Lap(\beta) = x] = \frac{1}{2\beta}e^{\frac{-|x|}{\beta}}
+\end{align*}
+
+\textbf{Aggregation:} Several methods are proposed for aggregating the results created by the H.E. protocol, but as mentioned by the authors, the best one is called \textbf{Thresholding with H.E.}, where a threshold value is introduced in order to decide what to keep from the reported values. The support function is altered as following:
+
+\begin{align*}
+    Support(B) = \{v | B[v] > \theta\}
+\end{align*}
+thus, if a noisy output is grater than theta supports the corresponding value. According to the writers, the optimal value for θ is in the range of $(\frac{1}{2}, 1)$. During the testings that are going to be conducted, we are going to use a threshold of $\frac{2}{3}$.
+
+
+Comparing this protocol to D.E., we observe that is solves the problem of the dependence of the noise drawn by the number of options to choose from. In H.E., no matter how large the domain size is, the noise solely depends on the epsilon value chosen by the user. Thus, when having a large domain size, it is clear that we should prefer the H.E. protocol over D.E.
+
+\subsection{Unary Encoding}
+
+The last protocol that is going to take part in the accuracy testings, is the Unary Encoding method, a further exploration of the Basic RAPPOR. It is a unique protocol, as the user does not set the level of privacy using epsilon, but by giving two probabilities, $p$ and $q$, such that $p+q = 1$, and the epsilon value is computed using those two parameters.
+
+\textbf{Encoding:} Exactly like in the H.E. method:
+\begin{align*}
+Encoding(v) = [0, 0, \dots, 1, \dots, 0] 
+\end{align*}
+where only the v-th element of the vector is equal to 1.
+
+\textbf{Perturbation:} This step is different than those that we already saw, and is carried out using the following function:
+
+
+\begin{equation*}
+    Pr[B'[i] = i] =
+	\begin{cases}
+    	p  & \mbox{if } B[i] = 1 \\
+    	q & \mbox{if } B[i] = 0 
+	\end{cases}
+\end{equation*}
+
+The epsilon value is decided given $p$ and $q$, and is defined as following:
+
+\begin{align*}
+    \epsilon = ln(\frac{p\cdot(1-q)}{(1-p)\cdot q})
+\end{align*}
+
+\textbf{Aggregation:} The Support function is once again altered, as in the U.E. protocol is defined as following:
+
+\begin{align*}
+    Support(B) = \{i | B[i] = 1\}
+\end{align*}
+
+and of course, $p^* = p$ and $q^* = q$, in order to make the protocol pure. As for the choice of $p$ and $q$, we opt to choose $p = \frac{1}{2}$, and $q = \frac{1}{e^\epsilon + 1}$.
+
+\section{Testings}
+
+\subsection{Setup}
+
+Now that all those protocols where introduced, we are going to compare them in order to decide which is better to use when wanting to apply L.D.P. in a dataset. We are going to use a dataset that was created using random values, but corresponds to the age of a group of people. The distribution of the values of the dataset is shown in the histogram in \textbf{Figure 4.2. }
+
+\begin{figure}[!htb]\centering
+    \includegraphics[width=1\textwidth]{images/true_answers_ldp.png}
+    \caption{True Answers for the Dataset of LDP}
+\end{figure}
+
+Each user will report one of these 50 values, and the aggregator of each protocol will gather the data given, and try to re-create this histogram in the best manner possible.
+
+\subsection{Goal}
+
+Wanting to decide which protocols behaves better, a number of different metrics will be used. The main focus of our testings will be the vectors that the aggregators provide, which we will compare with each other, as well as the vector with the true answers. In a similar manner as our G.D.P. testings, we are going to run the protocols for different values of epsilon, and different number of users used. The second one is extremely important in L.D.P., as we mentioned earlier that many protocols struggle with a small number of input, as the noise drawn is significant. 
+
+When it comes down to the choice of metrics, we are going to use the \textbf{Manhattan Distance}, known as the $l1$-norm, as well as the \textbf{Kantorovic Distance}, explained in 3.2.5.1.
+
+\subsection{Epsilon Measurements}
+
+The first comparison between the protocols will be with a changing epsilon value, in order to observe how they behave for lower and higher values of the privacy setting. During these testings, all of the users of the dataset were used(approximately 20 thousand), and each run of each protocol is carried out 10 times, just like in other testings, in order to eliminate the danger of drawing extreme values of noise.
+
+First, we are going to run all the protocols and compare them using the Manhattan Distance. The results are shown in the \textbf{Figure 4.3.}
+
+
+\begin{figure}[!htb]\centering
+    \includegraphics[width=1\textwidth]{images/epsilon_others_l1.png}
+    \caption{Epsilon Measurements compared by Manhattan Distance}
+\end{figure}
+
+
+We gather many useful observations from the above graph:
+
+\begin{itemize}
+    \item The Random Matrix protocol does not function as expected, as its accuracy does not follow the logarithmic curve we are used to when epsilon increases. However, for small values of ε, its results are acceptable, and some times even better than the pure protocols.
+    \item The pure protocols behave in a similar way, with the error stabilizing when epsilon gets higher than 2.5. 
+    \item The Direct Encoding protocol was the worst behaviour among the pure ones, with its error being extremely high for epsilon values lower than 1.  This is mainly due to the fact that when ε gets too small, the probability of telling the truth gets significantly low, thus creating a big error in accuracy.
+    \item The optimized U.E. protocol has the best behaviour in comparison to the other protocols tested.
+\end{itemize}
+
+Next up, we are going to run the same testings, but this time using the Kantorovich metric. We expect the protocols to behave even worse, because of the identity of the metric: the Kant. metric pays attention to the distance of the reported answer from the true one. The current protocols do not take into account the distance of the two answers, thus the metric will probably report a higher error. The results of the runs are shown in the \textbf{Figure 4.4.}
+
+\begin{figure}[!htb]\centering
+    \includegraphics[width=1\textwidth]{images/epsilon_others_kant.png}
+    \caption{Epsilon Measurements compared by Kantorovic Distance}
+\end{figure}
+
+
+As we expected, the protocols produce a higher error, with the D.E. being the worst among them, especially for lower values of epsilon. This is a rather alarming notice, in which we will come back in a later section.
+
+
+\subsection{Increasing number of users}
+
+
+The second testing that we will elaborate, is the accuracy error depending on the number of users used during the survey covered by the protocol. In the definition of L.D.P. the observation of the need of lots of users was made, and it is now time that we examine it. We are going to use a \textbf{fixed epsilon value}, one that our protocols behave similarly (at least the pure ones, in which we will focus our research moving forward). By observing Figure 4.3, we can see that the protocols behave in a similar manner when it comes down to accuracy error for epsilon values grater than 1.3. Thus, our fixed epsilon value will be 1.5.
+
+We are going to run the protocols and compare them using the Manhattan Distance. The results are shown in the \textbf{Figure 4.5.}
+
+
+

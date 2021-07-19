@@ -30,4 +30,8 @@ import pandas as pd
 # plt.bar(options, arr)
 # plt.show()
 
-print([i for i in range(10)])
+
+epsilon = [round(i/3 + 0.2, 2) for i in range (0,12)]
+
+
+print(epsilon)

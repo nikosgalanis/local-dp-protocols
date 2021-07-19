@@ -197,7 +197,7 @@ By observing the plots, we can make a couple of conclusions:
 
 The most important aspect when applying Differential Privacy to a dataset, is the selection of epsilon. This number is held accountable of the trade-off that DP offers: how much accuracy are we going to sacrifice in order to have less privacy loss, and vice versa. Given the library and our surgeries' costs dataset, we are going to measure the accuracy changes with the selection of different epsilon values.
 
-The size of the dataset is too big, and thus the computation of the sensitivity will take too long. We assume that the data are somewhat equally distributed, thus we chose only 1\% of the dataset(which is a significant number of members), to take part in our sensitivity calculations.
+The size of the dataset is too big, and thus the computation of the sensitivity will take too long. We assume that the data are somewhat equally distributed, thus we chose only 1\% of the dataset (which is a significant number of members), to take part in our sensitivity calculations.
 
 In order to observe if the library functions well, we are going to compare the results produced with the \textbf{theoretical bounds of the Laplace mechanism}. 
 
@@ -207,7 +207,10 @@ Sensitivity is defined as the maximum difference that can be found if we alter a
 
 \begin{itemize}
     \item \textbf{Local Sensitivity} which in theory is $ \Delta f = \max_{||x-y||_1 = 1} ||f(x)-f(y)||_1$
-    \item \textbf{Global Sensitivity} which we are going to use in our testings, and is defined as: $ \Delta f = \frac{upper - lower}{length(DB)} $, where upper and lower are the highest and lowest values of the column we are interested in our dataset, and length is the size of the database.
+    \item \textbf{Global Sensitivity} which we are going to use in our testings, and is defined as:
+    \begin{align*}
+        \Delta f = \frac{upper - lower}{length(DB)}
+    \end{align*} where upper and lower are the highest and lowest values of the column we are interested in our dataset, and length is the size of the database.
 \end{itemize}
 
 In order to compute the local sensitivity, we must check the maximum difference in the query result that occurs if we remove a single person from the database. We are going to define a function to do so, so we can check the theoretical bounds during our tests.
@@ -216,10 +219,10 @@ The results of those testings are shown in the \textbf{Figure 3.2}.
 
 \begin{figure}[!htb]\centering
     \includegraphics[width=1\textwidth]{images/epsilon_measurements.png}
-    \caption{Accuracy Error for Increasing Dataset Sizes}
+    \caption{Real and Optimal Accuracy Error for Increasing epsilon values}
 \end{figure}
 
-It is clear that as we increase the epsilon value, the privacy loss gets bigger. On the other hand, if epsilon is too small, as we can see in the above plot, we are going to have extreme errors in accuracy in our queries. 
+It is clear that as we increase the epsilon value, the privacy loss gets bigger. On the other hand, if epsilon is too small, as we can see in the above plot, extreme errors in accuracy in our queries will emerge. 
 
 The optimal value of epsilon varies, there is no general rule for the perfect epsilon. It depends on many different aspects, such as:
 
@@ -232,7 +235,7 @@ The optimal value of epsilon varies, there is no general rule for the perfect ep
 
 Moreover, the selection of epsilon depends on the dataset. For example, we might have a dataset that is extremely important to have minimal privacy loss. In that case, we will opt to use a rather small epsilon, thus we do not disclose the sensitive data included. An other dataset could be less sensitive, but the analyst might have a need for extreme accuracy every time, so the epsilon selected should be rather big.
 
-Regarding the comparison with the Laplace bounds, we can see that the library's query performs significantly good throughout the different epsilon values selected. This is due to the fact that IBM uses the same formula to compute the sensitivity, as well as a similar mechanism (Laplace truncated noise), in order to answer to our queries.
+Regarding the comparison with the Laplace bounds, we can see that the library's query performs significantly well throughout the different epsilon values selected. This is due to the fact that IBM uses the same formula to compute the sensitivity, as well as a similar mechanism (Laplace truncated noise), in order to answer to our queries.
 
 \subsection{Histogram Queries}
 
@@ -243,9 +246,9 @@ The IBM DP library offers a differential private way to create histograms. The d
 \subsubsection{Metrics Used}
 The result of a histogram query on a dataset is a vector containing how many entries belong on a specific range. Thus, the comparison between 2 histograms can be held out by comparing those vectors. 
 
-There are plenty of metrics used to compare vectors, but we are going to focus on the \textbf{Euclidean Metric} and the \textbf{Kantorovich metric}(also known as Wasserstein or EMD metric). 
+There are plenty of metrics used to compare vectors, but we are going to focus on the \textbf{Euclidean Metric} and the \textbf{Kantorovich metric} (also known as Wasserstein or EMD metric). 
 
-The euclidean metric is one of the most simple metrics, as it takes into account the distance between each pair of the 2 vectors. Thus, the distance of the vectors is defined by:
+The Euclidean metric is one of the most simple metrics, as it takes into account the distance between each pair of the two vectors. Thus, the distance of the vectors is defined by:
 
 \begin{align*}
     d = \sqrt{\sum_{i=1}^n (x_i - y_i) ^ 2}
@@ -253,24 +256,24 @@ The euclidean metric is one of the most simple metrics, as it takes into account
 
 where $n$ are the total elements of the vectors (must be of equal size), and $x$ and $y$ are the 2 vectors that we are comparing.
 
-The Kantorovich metric is a more complex one, as it examines the cost to move a specific quantity of the one vector to the other, in order for the two to be similar, and thus figuring out their distance. For example, the Kant. Distance is larger if we have the vectors $[0 0 0 1]$ and $[1 0 0 0]$ than having the vectors $[0 0 0 1]$ and $[0 0 1 0]$, as in the first case the one element of the histogram is moved 3 places in order to be similar to the second one. In order to determine the cost, a base metric is used, which in our case will be the euclidean.
+The Kantorovich metric is a more complex one, as it examines the cost to move a specific quantity of the one vector to the other, in order for the two to be similar, and thus figuring out their distance. For example, the Kant. distance is larger if we have the vectors $[0 0 0 1]$ and $[1 0 0 0]$ than having the vectors $[0 0 0 1]$ and $[0 0 1 0]$, as in the first case the first element of the histogram is moved 3 places in order to be similar to the second one. In order to determine the cost, a base metric is used, which in our case will be the euclidean.
 
-The way that the metric works in a naive approach, is explained in the \textbf{Figure 3.3.}
+The way that the metric works in a naive approach, is explained in \textbf{Figure 3.3.}
 
 \begin{figure}[!htb]\centering
     \includegraphics[width=0.7\textwidth]{images/emd.png}
     \caption{Kantorovich Metric Application on 2 histograms}
 \end{figure}
 
-This metric is much more suitable for D.P. as we are not just interested in the alteration of the results, but on the amount of alteration. If for example we are examining a histogram that contains the age of a hospital's patients, it is not the same for the private histogram to deem a 10 year old patient as 90 year old, than deeming him as 11. 
+This metric is much more suitable for D.P. as we are not just interested in the alteration of the results, but on the amount of alteration. If, for example, we are examining a histogram that contains the age of a hospital's patients, it is not the same for the private histogram to deem a 10 year old patient as 90 year old, than deeming him as 11. 
 
-In order for the Kantorovich metric to be computed, we must solve a Dynamic Programming Problem, and make complex calculations, which are beyond of the subject of this thesis. There are many implementations of the metric, and since IBM's library is written in Python, we are going to use the QIF library %TODO:Insert mention.
+In order for the Kantorovich metric to be computed, we must solve a Dynamic Programming Problem, and make complex calculations, which are beyond the subject of this thesis. There are many implementations of the metric, and since IBM's library is written in Python, we are going to use the QIF library %TODO:Insert mention.
 which is also available as a Python library. 
 
 
 \subsubsection{Bounds Definition}
 
-In this testings we are examining salaries, thus we must set the lower and the higher bounds such as to support the most extreme salaries that could possibly be present in the dataset. Thus, the lower bound will be 0 dollars, and the higher 500,000 dollars.
+In the following testings we are examining salaries, thus we must set the lower and the higher bounds such as to support the most extreme salaries that could possibly be present in the dataset. Therefore, the lower bound is set to 0 dollars, and the higher to 500,000 dollars.
 
 \subsubsection{The identity of the testing Dataset}
 
@@ -307,7 +310,7 @@ We are going to focus on the last 2 columns, containing the employees' salaries.
 
 \subsubsection{Simple queries}
 
-At first, we are going to run simple instances of histogram queries, in order to take a look at the amount of error that we expect moving forward, and also familiarize with the execution of the commands. In order to create a private histogram using the library, we must provide the bins. Those should be identical to our bounds, that we have earlier defined. While creating the non-private histograms we are going to use the same bounds, in order for our comparisons to make sense. The creation of the bins and the private histogram are achieved using the following Python instructions:
+At first, we are going to run simple instances of histogram queries, so we can take a look at the amount of error that we expect moving forward, and also familiarize with the execution of the commands. To create a private histogram using the library, we must provide the bins. Those should be identical to our bounds, that we have earlier defined. While creating the non-private histograms we are going to use the same bounds, in order for our comparisons to make sense. The creation of the bins and the private histogram are achieved using the following Python instructions:
 
 \bigskip
 \begin{lstlisting}[basicstyle= \footnotesize,
@@ -351,21 +354,22 @@ We observe that the error curves follow the same ratio as the previous ones, ind
 \subsubsection{Histogram queries in theory}
 Based on [1] the histogram queries are very high sensitivity queries, thus a slight change to the bounds could be critical for their result. 
 
-The writers suggest that we use noise generated by the LaPlace mechanism, but with a slight change. In detail they suggest the following:
+The authors suggest that we use noise generated by the LaPlace mechanism, but with a slight change. In detail they suggest the following:
 
 \textit{"In the special (but common) case in which the queries are structurally disjoint we can do much better — we do not necessarily have to let the noise scale with the number of queries. An example is the histogram query. In this type of query the universe $N^X$ is partitioned into cells, and the query asks how many database elements lie in each of the cells. Because the cells are disjoint, the addition or removal of a single database element can affect the count in exactly one cell, and the difference to that cell is bounded by 1, so histogram queries have sensitivity 1 and can be answered by adding independent draws from $Lap(\frac{1}{\epsilon})$ to the true count in each cell."}
-
+\clearpage
 
 \subsection{Conclusions}
 
-After a rather satisfying amount of testing in a large, real world dataset, we can safely say, that the IBM DP library has quite impressive results when it comes down to the trade-off between privacy and accuracy during both simple counting queries and histogram ones. However, we are cautious about 2 problems that we observed while using the library:
+After a rather satisfying amount of testing in a large, real world dataset, we can safely say, that the IBM DP library has quite impressive results when it comes down to the trade-off between privacy and accuracy during both simple counting queries and histogram ones. However, we are cautious about 2 problems that were observed while using the library:
 
 \begin{itemize}
  \item \textbf{Bounds checking}. The user must define himself the bounds, a fact that causes for speculations on the variance of the values in the dataset. It would be convenient to take the lowest and highest value in the field that we are examining, in fact that is how IBM demonstrates those examples, but that violates the rule that prevents the user from having any info of the dataset before the DP processing.
  
- \item \textbf{Non-DP preprocessing}. If we ask complicated queries (ex Surgeries performed in Stanford), the library does not offer a way to preprocess the data, thus we trust python in doing so, which results in a non-DP way of shrinking the dataset. The result that is given is of course differential private, but what happens if the dataset has only 1 record in it? That, while being a very extreme case, violates the definition of differential privacy.
+ \item \textbf{Non-DP preprocessing}. If we ask complicated queries (ex Surgeries performed in Stanford), the library does not offer a way to preprocess the data, thus we trust python in doing so, which results in a non-DP way of shrinking the dataset. The result obtained is of course differential private, but what happens if the dataset has only 1 record in it? That, while being a very extreme case, violates the definition of differential privacy.
 \end{itemize}
 
-The bounds' problem can be solved by running a minimum and maximum value differentially private query, which might in some cases leave some of the datasets out, but is a rather satisfying solution. 
+The bounds' problem can be solved by running a minimum and maximum value differentially private query, which might in some cases leave certain datasets out, but is a rather satisfying solution. 
 
 The Non-DP preprossessing is a more tricky one, that needs special techniques in order to cover the edge case mentioned. However, we are going to check such techniques in the following section, which is based on returning the whole dataset after the application of D.P.
+

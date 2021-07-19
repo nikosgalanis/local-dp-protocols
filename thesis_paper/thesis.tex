@@ -68,14 +68,14 @@
 %
 % The title of the thesis
 %
-\titleEn{Real World Applications of Differential Data Privacy}
-\titleGr{Εφαρμογές της Διαφορικής Ιδιωτικότητας Δεδομένων}
+\titleEn{Protection of Sensitive Data: Creating, Analyzing and Testing Protocols of Differential Privacy}
+\titleGr{Προστασία Ευαίσθητων Δεδομένων: Δημιουργία, Ανάλυση και Δοκιμή πρωτοκόλλων Διαφορικής Ιδιωτικότητας}
 
 %
 % Month followed by Year
 %
-\dateGr{ΙΟΥΝΙΟΣ 2021}
-\dateEn{JUNE 2021}
+\dateGr{ΙΟΥΛΙΟΣ 2021}
+\dateEn{JULY 2021}
 
 %
 % Supervisor(s) info
@@ -162,7 +162,7 @@ Mε την υπάρχουσα κατάσταση, υπάρχει η απλή λ�
 
 \include{LDP/other_protocols}
 
-
+\include{LDP/our_protocol}
 
 \chapter{CONCLUSIONS AND FUTURE WORK}
 %   \lipsum[3-5]
@@ -198,8 +198,33 @@ Mε την υπάρχουσα κατάσταση, υπάρχει η απλή λ�
 \addcontentsline{toc}{chapter}{APPENDICES}
 
 \chapter{FIRST APPENDIX}
-\chapter{SECOND APPENDIX}
-\chapter{THIRD APPENDIX}
+During this Appendix, a mathematical explanation for the $a$ variable in the D.S. protocol will be given.
+
+In order to find out the $\alpha$ value, we must solve the following equation:
+
+\begin{align*}
+    p + \sum_{i = x - \theta}^{i = x + \theta} q + \sum_{i = 1}^{i = x - \theta -1} s + \sum_{i = x + \theta + 1}^{i = d} s = 1
+\end{align*}
+
+At this point, we must note that $\aplha$ although not a constant, can be held out of the sums, because it is obviously independent from the $i$ variable, that is the variable parsing through the domain in order to retrieve the false elements' probabilities. Thus, we have:
+
+\begin{align*}
+        p + \sum_{i = x - \theta}^{i = x + \theta} q + \sum_{i = 1}^{i = x - \theta -1} s + \sum_{i = x + \theta + 1}^{i = d} s = 1 \Longleftrightarrow \\
+      \sum_{i = x - \theta}^{i = x + \theta} \frac{a}{|x-i|(|x-i| + 1)} + \sum_{i = 1}^{i = x - \theta -1} \frac{a}{\theta(\theta+1)} + \sum_{i = x + \theta + 1}^{i = d} \frac{a}{\theta(\theta+1)} = 1 - p \Longleftrightarrow \\
+    \sum_{i = x - \theta}^{i = x - 1} \frac{a}{(x - i)(x - i + 1)} + \sum_{i = x + 1}^{i = x + \theta} \frac{a}{(i - x)(i - x + 1)} +\\+ \frac{a}{\theta(\theta+1)} \cdot (x - \theta - 1 + d - x - \theta) = 1 - p \Longleftrightarrow \\
+\end{align*}
+
+For the first sum, we set $u = x - i$ and for the second one $u = i - x$, and we have:
+
+\begin{align*}
+    \sum_{u = 1}^{u = \theta} \frac{a}{u (u + 1)} + \sum_{u = 1}^{u = \theta} \frac{a}{u (u + 1)} + \frac{a}{\theta(\theta+1)} \cdot (d - 2\theta - 1) = 1 - p \Longleftrightarrow\\
+    2 \cdot a (1 - \frac{1}{\theta + 1}) + \frac{a}{\theta(\theta+1)} \cdot (d - 2\theta - 1) = 1 - p \Longleftrightarrow\\
+    2 \cdot a \frac{\theta}{\theta + 1} + \frac{a}{\theta(\theta+1)} \cdot (d - 2\theta - 1) = 1 - p \Longleftrightarrow\\
+    \frac{a}{\theta + 1}(2 \theta + \frac{d - 2\theta - 1}{\theta}) = 1 - p \Longleftrightarrow \\ 
+    \frac{a}{\theta + 1}(\frac{2\theta^2 - 2\theta + d - 1}{\theta}) = 1 - p \Longleftrightarrow \\ 
+    \mathbf{a = \frac{\theta(\theta + 1) (1 - p)}{2\theta^2 - 2\theta + d - 1}}
+\end{align*}
+
 \end{appendix}
 
 % manually include the bibliography
