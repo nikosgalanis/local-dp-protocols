@@ -2,7 +2,7 @@
 
 \subsection{Idea}
 
-In the previous section we discussed various LDP Protocols that function extremely well for numerical values (histogram type), with accuracy that is completely acceptable. However, when the number of users is limited, (eg under 1000), the results of the testings that we carried out are rather alarming, which causes these algorithms to produce inaccurate results. This is mainly due to the fact that the probability of an item to be chosen is independent of the distance between the true and the selected value.
+In the previous section we discussed various LDP Protocols that function extremely well for numerical values (histogram type), with accuracy that is completely acceptable. However, when the number of users is limited, (eg under 1000), the observations from the testings that we carried out are rather alarming. This is mainly due to the fact that the probability of an item to be chosen is independent of the distance between the true and the selected value.
 
 
 Thus, for the needs of this Thesis, a new L.D.P. protocol was constructed. The idea proposed is to \textbf{have the probability of choosing an element of the domain to depend on the distance from the true value}. This could prove very helpful for histogram values, but does not make any sense for categorical values. From now on, we are going to focus on histogram values.
@@ -20,7 +20,7 @@ Based on our idea, the probabilities' distribution, in comparison with the distr
 \end{figure}
 
 
-Thus, there is an area around the true value that has high probability to be selected. The width of this area(from now on $\theta$) is defined by the epsilon setting that the user wants to use. The idea for having a specific area and not decreasing our probabilities as low as it goes when we diverge from the true value, is based on our need to be able to serve low epsilon values, as the first would be a big no for when the users wants to use a high privacy setting.
+Thus, there is an area around the true value that has high probability to be selected. The width of this area(from now on $\theta$) is defined by the epsilon setting that the user wants to use. The idea for having a specific area and not decreasing our probabilities as low as it goes when we diverge from the true value, is based on our need to be able to serve low epsilon values, as the first would be a big no for when the users want to use a high privacy setting.
 
 \subsection{Mathematical Background}
 
@@ -30,7 +30,7 @@ $$
 $$
 where x is the true value, and the i the false one that we are looking at in order to report it.
 
-When we get out of this area, the denominator will have a constant value, proportional to the boundaries of the selected area. 
+When we are out of this area, the denominator will have a constant value, proportional to the boundaries of the selected area. 
 
 \textbf{Example}: Let's suppose that we have a domain size of 100, and our $\theta$ value is 4. All the probabilities outside the area, should be in reverse proportion of $\theta$, thus 4.
 
@@ -124,7 +124,7 @@ If we solve the quadratic equation, and reject its one (illegal) solution, we ge
     \theta = \lfloor \frac{\sqrt{4e^{\epsilon} + 1} - 1}{2}\rfloor
 \end{align}
 
-So, to conclude, in order for the protocol to function, the user must provide just the epsilon setting, from which the $\theta$ constant is computed, and so the probabilities for each item of the domain to be selected.  
+So, to conclude, in order for the protocol to function, the user must provide just the epsilon setting, from which the $\theta$ constant is computed, and so the probabilities for each item of the domain will be selected.  
 
 
 \subsection{Protocol Definition}
@@ -215,3 +215,42 @@ Now, the probabilistic distribution can be altered as following:
 
 The definition of D.P. is not altered, because again in the best case we have a probability of $p = a$, and in the worst case $s = \frac{a}{\theta(\theta+1)}$.
 
+\subsection{Implementation}
+
+The most difficult part of the implementation of our protocol consists of creating the probabilistic distribution for each element of the domain, depending on the true value. This can prove to be costly, if we have a large domain or if we are in the case of the extreme x values.
+
+However, we do not need to compute every single probability, as it is clear from the definition that they are independent from the true value: they only depend on $a$ (and on the domain size in case of an extreme x value). The quantity $|i - x|$ can only take values in the range of $[1,\theta]$, thus constant for every possible true value. Moreover, for the domain values outside of the area, the probability is fixed and equal to $\frac{a}{\theta(\theta + 1)}$. Hence, the probabilities can be computed in advance, either by each user, or given to the protocol by the aggregator. 
+
+The protocol has been implemented using Python, and can be found in the GitHub repository of this Thesis. Moving forward, we are going to use this implementation in order to conduct some testings to ensure the protocol's functionality.
+
+\subsection{Testings}
+First up, we are going to perform the epsilon measurements that we did for the other protocols, this time excluding the Random Matrix approach, and including the D.S. protocol. The results, when running with the Kantorovich metric, are the following:
+
+\begin{figure}[!htb]\centering
+    \includegraphics[width=1\textwidth]{images/epsilon_our_kant.png}
+    \caption{Epsilon measurements for D.S. protocol compared by Kantorovich Distance}
+\end{figure}
+
+The first observation is the \textbf{weird form of the curve of our protocol}. This can be easily explained: the theta value used to determine the area around the true value, is depended on epsilon, but has a floor function applied to it. Thus, for a specific range of ε, the protocol produces the same results. 
+
+An other observation is that\textbf{ our protocol lacks efficiency for low values of epsilon}, that makes sense, since small θ values do not help our idea at all. However, when epsilon gets higher than 1.5 (and thus theta rises above 2), the results are more than satisfying: \textbf{our protocol has the best behaviour for epsilon in the range of $\mathbf{(2, 2.5)}$.}
+
+The real test though, is how our protocol behaves for an increasing number of users: we must check if it produces better accuracy error than the competitors. This is our next testing, where we are going to set $\epsilon = ln(20)$, in order for the conditions to be favorable for each one of the protocols. The results are shown in the \textbf{Figure 4.10}.
+
+
+\begin{figure}[!htb]\centering
+    \includegraphics[width=1\textwidth]{images/users_our_kant.png}
+    \caption{Increasing users measurements for D.S. protocol compared by Kantorovich Distance}
+\end{figure}
+
+The results are impressive: for the specific epsilon setting, \textbf{our protocol produces extremely good accuracy error for a small number of users.}, beating by a lot the U.E. protocol. The comparisons have been made using the Kantorovich metric, the most characteristic of them all, as it takes into account the distance between the real answers and the projections, exactly what our protocol is designed to do. However, we are also going to perform the same testings using the Manhattan metric. The results are shown in the \textbf{Figure 4.11}.
+
+\begin{figure}[!htb]\centering
+    \includegraphics[width=1\textwidth]{images/users_our_l1.png}
+    \caption{Increasing users measurements for D.S. protocol compared by Manhattan Distance}
+\end{figure}
+
+The results of the Manhattan-driven tests are similar to the ones made with the Kant. metric. However, we observe that \textbf{when the number of users rises, our protocol has worse behaviour in comparison to the other pure ones}. This happens mainly because of the other protocols, that by the law of big numbers, have good accuracy because of the higher probability of choosing the true answer. On the other hand, in our protocol, this probability is reduced and shared with the other elements in the area covered by theta. 
+
+\subsection{Conclusions}
+In general, \textbf{the D.S. protocol succeeds when the number of the participants in a survey is extremely low}, and functions similarly with the other protocols for an increasing number of users. The downside is that it does not always takes full advantage of the epsilon setting, as explained in a previous section. However, the results are more than satisfying. Hence, \textbf{this is a fully functioning protocol that can be used for the application of L.D.P., especially in a situation when few people take part in the survey.} The protocol will be further tested in more extreme cases, but this is beyond the scope of this Thesis.

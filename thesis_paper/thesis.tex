@@ -7,7 +7,7 @@
 %
 % Check file `dithesis.cls' for other configuration options.
 %
-\documentclass[inscr,ack,preface]{dithesis}
+\documentclass[inscr]{dithesis}
 
 %\usepackage{graphicx}
 
@@ -69,7 +69,7 @@
 % The title of the thesis
 %
 \titleEn{Protection of Sensitive Data: Creating, Analyzing and Testing Protocols of Differential Privacy}
-\titleGr{Προστασία Ευαίσθητων Δεδομένων: Δημιουργία, Ανάλυση και Δοκιμή πρωτοκόλλων Διαφορικής Ιδιωτικότητας}
+\titleGr{Προστασία Ευαίσθητων Δεδομένων: Δημιουργία, Ανάλυση και Δοκιμή Πρωτοκόλλων Διαφορικής Ιδιωτικότητας}
 
 %
 % Month followed by Year
@@ -93,7 +93,9 @@
 \par With that being the case, there is a simple solution of denying the access to user data, thus making the mining of useful information about a plethora of subjects impossible. On the other hand, a successful mechanism would be for the data to be flowing without control, something that would be beneficiary for the advance of sciences (because of the huge amount of information that would be available), but a significant compromisation for the individuals' privacy. \par
 However, none of these two solutions are applicable and helpful for solving our problem. The answer is finding a balance, that would benefit both parties: the users and their privacy, as well as the researchers. The optimal fix to the subject, is Differential Privacy, which is actually a promise, made by the data handler to the user, that they will not be affected, by allowing their data to be used in any analysis, no matter what other studies/databases/info resources are available. Meanwhile, the output data statistics should be accurate enough for any researcher to extract useful information from them.\par
 This is a promise that in the first sight, seems rather hard to be achieved. Despite that, during this thesis, we will look closely into the theory which makes this form of privacy possible, by the addition of random noise to the user data. Differential Privacy is based on probabilistic theories, well known from the $20^{th}$ century, however, it is a rather new technique, which has yet to be fully implemented in a handy way for all data-miners to use.
-\par The goal of this thesis, is to examine and compare previously created mechanisms for D.P., while also creating our own mechanism, that serves to the purpose of achieving Local D.P., a form of Differential Privacy that is nowadays widely used in machine learning algorithms, aiming to protect the individuals that send their personal data for analysis. We will do so, by creating a library that is easy to use, and applies to all the rules of data privacy, and then extract conclusions from its use.
+\par The goal of this thesis, is to examine and compare previously created mechanisms for D.P., while also creating our own mechanism, that serves to the purpose of achieving Local D.P., a form of Differential Privacy that is nowadays widely used in machine learning algorithms, aiming to protect the individuals that send their personal data for analysis. We will do so, by creating a library that is easy to use, and applies to all the rules of data privacy, and then extract conclusions from its use. 
+
+During this thesis, a lot of testings will be made, in order to convince for the usability and the efficiency of Differential Privacy.
 }
 \abstractGr{
 Το πρόβλημα της διατήρησης της ιδιωτικότητας κατά την ανάλυση δεδομένων, υφίσταται για πολύ καιρό. Συγκεκριμένα, στην εποχή των big-data, λεπτομέρειες των χρηστών μπορούν εύκολα να παραβιαστούν από κακόβουλους χειριστές των δεδομένων, γεγονός που θεωρείται ζήτημα τόσο όσον αφορά την ασφάλεια, όσο και την προστασία της ιδιωτικότητας του ατόμου.\par
@@ -103,22 +105,9 @@ Mε την υπάρχουσα κατάσταση, υπάρχει η απλή λ�
 Η υπόσχεση αυτή, δείχνει δύσκολα υλοποιήσιμη με την πρώτη ματιά. Παρόλα αυτά, σε αυτήν την πτυχιακή εργασία, θα ερευνήσουμε με λεπτομέρεια τη θεωρία που καθιστά εφικτή αυτή τη μορφή ιδιωτικότητας, με την προσθήκη τυχαίου θορύβου στα δεδομένα. Η Διαφορική Ιδιωτικότητα βασίζεται σε πιθανοτικές κατανομές, γνωστές ήδη από τον $20^o$ αιώνα, όμως παραμένει μία νέα τεχνική, η οποία δεν έχει πλήρως υλοποιηθεί με τρόπο τέτοιον ώστε να μπορεί να χρησιμοποιηθεί από πολλούς ανθρώπους που είναι υπεύθυνοι για την εξαγωγή δεδομένων.
 \par Σκοπός αυτής της πτυχιακής εργασίας, είναι να μελετήσουμε και να συγκρίνουμε ήδη υλοποιημένους μηχανισμούς πανω στην Δ.Ι., ενώ παράλληλα θα δημιουργήσουμε τον δικό μας μηχανισμό, ο οποίος χρησιμοποιείται για τους σκοπούς της Τοπικής Διαφορικής Ιδιωτικότητας που συναντάται την σήμερον ημέραν σε αλγορίθμους μηχανικής μάθησης, με στόχο να προστατέψει τα δεδομένα που αποστέλλουν για εκμάθηση οι χρήστες. Θα το κατορθώσουμε αυτό δημιουργώντας μία προγραμματιστική βιβλιοθήκη η οποία είναι εύκολη στη χρήση, ικανοποιώνατας παράλληλα τους κανόνες της προστασίας δεδομένων, και τέλος θα εξάγουμε συμπεράσματα από τη χρήση της βιβλιοθήκης αυτής.
 
-}
-\acksEn{
-\begin{greek}
-Στη σελίδα αυτή αναφέρονται οι ευχαριστίες. Η σελίδα αυτή είναι προαιρετική. Παρατίθεται παράδειγμα ευχαριστιών.
+Κατά την διάρκεια αυτής της εργασίας, θα πραγματοποιηθούν πολλές μετρήσεις, με στόχο να γίνει πειστική η χρησιμότητα και η αποτελεσματικότητα της Διαφορικής Ιδιωτικότητας.
 
-Για τη διεκπεραίωση της παρούσας Πτυχιακής Εργασίας, θα θέλαμε να ευχαριστήσουμε τους επιβλέποντες, αν. καθ .Ευστράτιο Γεωργιάδη, Γρηγόριο Παπάμαλο, Αναστασία Γούσιου, Ξενοφών Παπαδόπουλο, για τη συνεργασία και την πολύτιμη συμβολή του στην ολοκλήρωση της.
-\end{greek}
 }
-\prefaceEn{
-\begin{greek}
-Στον πρόλογο αναφέρονται θέματα που δεν είναι επιστημονικά ή τεχνικά, όπως το πλαίσιο που διενεργήθηκε η εργασία, ευχαριστίες, ο τόπος διεξαγωγής κλπ.
-\end{greek}
-}
-
-\inscriptionEn{\emph{Στη σελίδα αυτή αναφέρονται οι αφιερώσεις. Η σελίδα αυτή είναι προαιρετική.}}
-
 %
 % Subject area and keywords
 %
@@ -165,9 +154,21 @@ Mε την υπάρχουσα κατάσταση, υπάρχει η απλή λ�
 \include{LDP/our_protocol}
 
 \chapter{CONCLUSIONS AND FUTURE WORK}
-%   \lipsum[3-5]
-  One reference to some paper \cite{manning:corenlp} and to another paper
-  \cite{pennington:glove}.
+
+After the elaboration of the current Thesis, it is clear that Differential Privacy is an extremely secure and efficient way to protect sensitive data. Having two forms, the Global and the Local, it can cover many different scenarios, including Machine Learning applications.
+
+Differential Privacy is the future of Data Protection and Anonymization, as its results can not be compromised, due to the random noise that the algorithms introduce. Unlike previous methods, like k-anonymity, there is not yet an attack that can reduce the privacy created by D.P. algorithms, which makes this technique the best one for data protection.
+
+During the introduction we claimed that it is difficult to comprehend how after the use of random noise the data is still useful. Now, it is clear that this promise can be delivered, as the mathematical ideas behind the aggregation are build with the mindset of eliminating this noise using data normalization.
+
+Having explored many different applications, algorithms and protocols we can safely say that when it comes down to Global D.P., IBM's diffprivlib is a state of the art library that produces extremely good results. Its use is quite simple as a Python API is provided, thus 
+
+When someone wants to apply L.D.P. during a survey, the pure protocols analyzed and tested are suitable for high efficiency combined with good protections of the members. However, when the number of users is small, \textbf{the Distance Sensitive Protocol created for the needs of this Thesis is the best option}. 
+
+Our plans for future work are centered around the D.S. protocol. We would like to perfect its aggregation method, as it may produce satisfying results, but with a different approach it can maybe become even better. Moreover, we would like to perform more demanding testings for extreme cases of dataset sizes, domain sizes and theta values.
+
+Finally, similar testings like the ones introduced in this Thesis can be performed in other D.P. libraries, as the accuracy measurements is a good indicator if someone wants to rank those libraries.
+
 
 \backmatter
 
@@ -177,14 +178,32 @@ Mε την υπάρχουσα κατάσταση, υπάρχει η απλή λ�
 	\renewcommand{\arraystretch}{1.5}
 	\begin{longtable}{| l | @{\qquad} l |}
 	\hline
-	RDF    & Resource Description Framework \\
+	EMD & Earth Mover's Distance \\
   \hline
-	SPARQL & SPARQL Protocol and RDF Query Language \\
+    QIF & Quantitative Information Flow \\
   \hline
-	OWL    & Web Ontology Language \\
+	DP & Differential Privacy\\
   \hline
-	OGC    & Open Geospatial Consortium \\
-	\hline
+	Kant. & Kantorovich \\
+  \hline
+  LDP & Local Differential Privacy\\
+  \hline
+  GDP & Global Differential Privacy\\
+  \hline
+  CSV & Comma Separated Values\\
+  \hline
+  GUI & Graphical User Interface\\
+  \hline
+  RR & Randomized Response\\
+  \hline
+  DE & Direct Encoding\\
+  \hline
+  HE & Histogram Encoding\\
+  \hline
+  UE & Unary Encoding\\
+  \hline
+  DS & Distance Sensitive\\
+  \hline
 	\end{longtable}
 \end{center}
 
@@ -197,7 +216,7 @@ Mε την υπάρχουσα κατάσταση, υπάρχει η απλή λ�
 \phantomsection
 \addcontentsline{toc}{chapter}{APPENDICES}
 
-\chapter{FIRST APPENDIX}
+\chapter{MATHEMATICAL PROOF OF THE D.S. PROTOCOL}
 During this Appendix, a mathematical explanation for the $a$ variable in the D.S. protocol will be given.
 
 In order to find out the $\alpha$ value, we must solve the following equation:
@@ -225,13 +244,57 @@ For the first sum, we set $u = x - i$ and for the second one $u = i - x$, and we
     \mathbf{a = \frac{\theta(\theta + 1) (1 - p)}{2\theta^2 - 2\theta + d - 1}}
 \end{align*}
 
+\chapter{REPOSITORY OF THE THESIS}
+The implementation of all the testings, the libraries and the protocols can be found in the GitHub repository of this thesis, in the link: \url{https://github.com/nikosgalanis/bsc-thesis}. 
+
+In the directory \textit{ibm\_lib\_work}, all the notebooks with the measurements made for the IBM library are included.
+
+In the directory \textit{ARX\_work}, the java code for the measurements in ARX is included, as well as the datasets and the hierarchies used in order to test the protocol.
+
+In the directory \textit{LDP}, the LDP library is implemented, using the already-known protocols from the Wang et. al. paper. Additionally, our own protocol created for the needs of this Thesis is included, alongside with a Python file responsible to create all the testings that were carried out.
+
+Finally, in the directory \textit{papers\_used}, all of the papers referenced in this Thesis can be found. 
+
+
+More information for the repository and its contents can be found in the README file included.
+
 \end{appendix}
 
-% manually include the bibliography
+% % manually include the bibliography
 \bibliographystyle{plain}
 {\footnotesize \bibliography{references}}
 
-% include it also in ToC (do sth on your own)
+% % include it also in ToC (do sth on your own)
 \addcontentsline{toc}{chapter}{REFERENCES}
+
+[1]\hspace{1cm}Dwork, C., & Roth, A. (2014). The algorithmic foundations of differential privacy. now Publishers Inc. 
+
+[2]\hspace{1cm}Dwork, C., McSherry, F., Nissim, K., & Smith, A. (2006). Calibrating Noise to Sensitivity in Private Data Analysis. Theory of Cryptography, 265–284. 
+
+[3]\hspace{1cm}Holohan, N., Braghin, S., Mac Aonghusa, P., & Levacher, K. (2019, July 4). Diffprivlib: The IBM Differential Privacy Library. arXiv.org. 
+
+[4]\hspace{1cm}Li, N., Qardaji, W., & Su, D. (2012). On sampling, anonymization, and differential privacy or,k-anonymization meets differential privacy. Proceedings of the 7th ACM Symposium on Information, Computer and Communications Security - ASIACCS '12. 
+
+[5]\hspace{1cm}Bild, R., Kuhn, K. A., & Prasser, F. (2018). SafePub: A Truthful Data Anonymization Algorithm With Strong Privacy Guarantees. Proceedings on Privacy Enhancing Technologies, 2018(1), 67–87.
+
+[6]\hspace{1cm}Christofides, T. C. (2003). A generalized randomized response technique. Metrika, 57(2), 195–200. 
+
+[7]\hspace{1cm}Chatzikokolakis, K., Palamidessi, C., & Stronati, M. (2015). Location privacy via geo-indistinguishability. ACM SIGLOG News, 2(3), 46–69. 
+
+[8]\hspace{1cm}Jain, P., Gyanchandani, M., & Khare, N. (2018). Differential privacy: its technological prescriptive using big data. Journal of Big Data, 5(1). 
+
+[9]\hspace{1cm}Bebensee, B. (2019, July 27). Local Differential Privacy: a tutorial. arXiv.org. 
+
+[10]\hspace{1cm}Tianhao Wang, Jeremiah Blocki, Ninghui Li, and Somesh Jha. 2017. Locally differentially private protocols for frequency estimation. In Proceedings of the 26th USENIX Conference on Security Symposium (SEC'17). USENIX Association, USA, 729–745.
+
+[11]\hspace{1cm}Chatzikokolakis, K., Andrés, M. E., Bordenabe, N. E., & Palamidessi, C. (2013). Broadening the Scope of Differential Privacy Using Metrics. Privacy Enhancing Technologies, 82–102.
+
+[12]\hspace{1cm}Chamikara, M.A.P. & Bertok, P. & Khalil, Ibrahim & Liu, D. & Camtepe, Seyit. (2019). Local Differential Privacy for Deep Learning. 
+
+[13]\hspace{1cm}Chatzikokolakis, K., Fernandes, N., & Palamidessi, C. (2020). Refinement Orders for Quantitative Information Flow and Differential Privacy. Journal of Cybersecurity and Privacy, 1(1), 40–77.
+
+[14]\hspace{1cm}Bassily, R., & Smith, A. (2015). Local, Private, Efficient Protocols for Succinct Histograms. Proceedings of the Forty-Seventh Annual ACM Symposium on Theory of Computing.
+
+[15]\hspace{1cm}Erlingsson, Ú., Pihur, V., & Korolova, A. (2014). RAPPOR. Proceedings of the 2014 ACM SIGSAC Conference on Computer and Communications Security.
 
 \end{document}

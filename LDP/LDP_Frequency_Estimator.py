@@ -238,12 +238,12 @@ else:
 	dist_hist = []
 	unary = []
 	randmatr = []
-	size = 20000
+	size = 2000
 
-	epsilon = [round(i/3 + 0.2, 2) for i in range (0,12)]
-	max_samples = 10000
+	epsilon = [round(i/3 + 0.8, 2) for i in range (0,12)]
+	max_samples = 4000
 	
-	x = [i for i in range(10, max_samples, 200)]
+	x = [i for i in range(10, max_samples, 50)]
 
 
 	d = 50
@@ -253,7 +253,7 @@ else:
 
 	kant = qif.metric.kantorovich(euclid)   # distance on distributions
 
-	e = 1.5
+	e = np.log(20)
 	# for i in range(10, 10000, 10):
 	for i in tq.tqdm(x, position=0, leave=True):
 
@@ -262,20 +262,20 @@ else:
 		for j in range(0, 10):
 			a = estimator.test_protocol(i, input_file='../res.csv')
 			reses.append(manhattan_distance(a[0], a[1]))
-		res = sum(reses) / i *10  
+		res = sum(reses) / i * 10  
 
 		direct.append(res)
 
-		# estimator = Frequency_Estimator(50, method='RAPPOR', n_users=1000)
+		estimator = Frequency_Estimator(50, method='Distance_Sensitive_Encoding', epsilon=e, n_users=1000)
 
-		# reses = []
-		# for j in range(0, 1):
-		# 	a = estimator.test_protocol(size, input_file='../res.csv')
-		# 	reses.append(manhattan_distance(a[0], a[1]))
+		reses = []
+		for j in range(0, 10):
+			a = estimator.test_protocol(i, input_file='../res.csv')
+			reses.append(manhattan_distance(a[0], a[1]))
 
-		# res1 = sum(reses) / 1
+		res1 = sum(reses) / i *  10
 
-		# rappor.append(res1)
+		rappor.append(res1)
 
 		estimator = Frequency_Estimator(50, method='Histogram_Encoding', epsilon=e, n_users=1000)
 
@@ -284,7 +284,7 @@ else:
 			a = estimator.test_protocol(i, input_file='../res.csv')
 			reses.append(manhattan_distance(a[0], a[1]))
 
-		res2 = sum(reses) / i *10
+		res2 = sum(reses) / i * 10
 
 		dist_hist.append(res2)
 
@@ -298,7 +298,7 @@ else:
 			a = estimator.test_protocol(i, input_file='../res.csv')
 			reses.append(manhattan_distance(a[0], a[1]))
 
-		res3 = sum(reses) / i * 10
+		res3 = sum(reses) / i *  10
 
 		unary.append(res3)
 
@@ -309,7 +309,7 @@ else:
 			a = estimator.test_protocol(i, input_file='../res.csv')
 			reses.append(manhattan_distance(a[0], a[1]))
 
-		res4 = sum(reses) / i *10
+		res4 = sum(reses) / i *  10
 
 		randmatr.append(res4)
 
@@ -317,10 +317,10 @@ else:
 	plt.plot(x, dist_hist, 'g')
 	# plt.plot(epsilon, rappor, 'b')
 	plt.plot(x, unary, 'm')
-	plt.plot(x, randmatr, 'y')
-	plt.xlabel("Number of users")
+	plt.plot(x, rappor, 'y')
+	plt.xlabel("Number of Users")
 	plt.ylabel("Accuracy Error")
 
-	plt.legend(["Direct Encoding", "Histogram Encoding", "Unary Encoding", "Random Matrix"])
+	plt.legend(["Direct Encoding", "Histogram Encoding", "Unary Encoding", "Distance Sensitive Encoding"])
 	plt.savefig('../misc/latest_plot.png')
 	plt.show()
