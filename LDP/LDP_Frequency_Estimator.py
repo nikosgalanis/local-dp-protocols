@@ -178,11 +178,11 @@ class Frequency_Estimator():
 import matplotlib.pyplot as plt
 
 
-res = input("Method: [i]: instance | [r]: full run\n\n")
+res = input("Method: [i]: instance | [e]: epsilon measuerements | [u]: increasing users\n\n")
 max_samples = -1
 e = np.log(12)
 
-if (res == 'i'):
+if res == 'i':
 	estimator = Frequency_Estimator(50, method='Direct_Encoding', epsilon=e, n_users=1000)
 
 	res = estimator.test_protocol(max_samples, input_file='../res.csv')
@@ -202,23 +202,19 @@ if (res == 'i'):
 	print("\nsums\n\n", np.sum(res1[0]), np.sum(res1[1]), "\n\n")
 
 	xs = [i for i in range(50)]
-	# fig, axs = plt.subplots(3)
-	# fig.suptitle('Vertically stacked subplots')
-	# axs[0].bar(xs, res[0])
-	# axs[1].bar(xs, res[1])
-	# axs[2].bar(xs, res1[1])
+	fig, axs = plt.subplots(3)
+	fig.suptitle('Vertically stacked subplots')
+	axs[0].bar(xs, res[0])
+	axs[1].bar(xs, res[1])
+	axs[2].bar(xs, res1[1])
 
-	# # axs[0].set_ylim((0, 20))
-	# axs[1].set_ylim((0, max(res[0])))
-	# axs[2].set_ylim((0, max(res[0])))
+	# axs[0].set_ylim((0, 20))
+	axs[1].set_ylim((0, max(res[0])))
+	axs[2].set_ylim((0, max(res[0])))
 
-	# axs[0].title.set_text('True Data')
-	# axs[1].title.set_text('Perturbed Data produced by the Direct Encoding Protocol')
-	# axs[2].title.set_text('Perturbed Data produced by our Protocol')
-
-	plt.bar(xs, res[0])
-	plt.xlabel("Possible answers")
-	plt.show()
+	axs[0].title.set_text('True Data')
+	axs[1].title.set_text('Perturbed Data produced by the Direct Encoding Protocol')
+	axs[2].title.set_text('Perturbed Data produced by our Protocol')
 
 	def euclid(x, y):                       # ground distance
 		return abs(x-y)
@@ -231,22 +227,22 @@ if (res == 'i'):
 
 	plt.show()
 
-else:
+elif res == 'u':
 
 	direct = []
-	rappor = []
+	dist_sens = []
 	dist_hist = []
 	unary = []
 	randmatr = []
 	size = 2000
 
 	epsilon = [round(i/3 + 0.8, 2) for i in range (0,12)]
-	max_samples = 4000
-	
-	x = [i for i in range(10, max_samples, 50)]
-
-
+	max_samples = 1200
 	d = 50
+	
+	x = [i for i in range(10, max_samples, 20)]
+
+
 
 	def euclid(x, y):                       # ground distance
 		return abs(x-y)
@@ -254,14 +250,13 @@ else:
 	kant = qif.metric.kantorovich(euclid)   # distance on distributions
 
 	e = np.log(20)
-	# for i in range(10, 10000, 10):
 	for i in tq.tqdm(x, position=0, leave=True):
 
 		estimator = Frequency_Estimator(50, method='Direct_Encoding', epsilon=e, n_users=1000)
 		reses = []
 		for j in range(0, 10):
 			a = estimator.test_protocol(i, input_file='../res.csv')
-			reses.append(manhattan_distance(a[0], a[1]))
+			reses.append(kant(a[0], a[1]))
 		res = sum(reses) / i * 10  
 
 		direct.append(res)
@@ -271,18 +266,18 @@ else:
 		reses = []
 		for j in range(0, 10):
 			a = estimator.test_protocol(i, input_file='../res.csv')
-			reses.append(manhattan_distance(a[0], a[1]))
+			reses.append(kant(a[0], a[1]))
 
 		res1 = sum(reses) / i *  10
 
-		rappor.append(res1)
+		dist_hist.append(res1)
 
 		estimator = Frequency_Estimator(50, method='Histogram_Encoding', epsilon=e, n_users=1000)
 
 		reses = []
 		for j in range(0, 10):
 			a = estimator.test_protocol(i, input_file='../res.csv')
-			reses.append(manhattan_distance(a[0], a[1]))
+			reses.append(kant(a[0], a[1]))
 
 		res2 = sum(reses) / i * 10
 
@@ -296,7 +291,7 @@ else:
 		reses = []
 		for j in range(0, 10):
 			a = estimator.test_protocol(i, input_file='../res.csv')
-			reses.append(manhattan_distance(a[0], a[1]))
+			reses.append(kant(a[0], a[1]))
 
 		res3 = sum(reses) / i *  10
 
@@ -307,7 +302,7 @@ else:
 		reses = []
 		for j in range(0, 10):
 			a = estimator.test_protocol(i, input_file='../res.csv')
-			reses.append(manhattan_distance(a[0], a[1]))
+			reses.append(kant(a[0], a[1]))
 
 		res4 = sum(reses) / i *  10
 
@@ -315,10 +310,98 @@ else:
 
 	plt.plot(x, direct, 'r')
 	plt.plot(x, dist_hist, 'g')
-	# plt.plot(epsilon, rappor, 'b')
 	plt.plot(x, unary, 'm')
-	plt.plot(x, rappor, 'y')
+	plt.plot(x, dist_hist, 'y')
 	plt.xlabel("Number of Users")
+	plt.ylabel("Accuracy Error")
+
+	plt.legend(["Direct Encoding", "Histogram Encoding", "Unary Encoding", "Distance Sensitive Encoding"])
+	plt.savefig('../misc/latest_plot.png')
+	plt.show()
+
+else:
+    
+	direct = []
+	dist_sens = []
+	dist_hist = []
+	unary = []
+	randmatr = []
+	size = 2000
+
+	epsilon = [round(i/3 + 0.8, 2) for i in range (0,12)]
+	nusers = 10000
+	d = 50
+
+
+
+	def euclid(x, y):                       # ground distance
+		return abs(x-y)
+
+	kant = qif.metric.kantorovich(euclid)   # distance on distributions
+
+	for e in tq.tqdm(epsilon, position=0, leave=True):
+
+		estimator = Frequency_Estimator(50, method='Direct_Encoding', epsilon=e, n_users=1000)
+		reses = []
+		for j in range(0, 10):
+			a = estimator.test_protocol(nusers, input_file='../res.csv')
+			reses.append(kant(a[0], a[1]))
+		res = sum(reses) / 10  
+
+		direct.append(res)
+
+		estimator = Frequency_Estimator(50, method='Distance_Sensitive_Encoding', epsilon=e, n_users=1000)
+
+		reses = []
+		for j in range(0, 10):
+			a = estimator.test_protocol(nusers, input_file='../res.csv')
+			reses.append(kant(a[0], a[1]))
+
+		res1 = sum(reses) / 10
+
+		dist_hist.append(res1)
+
+		estimator = Frequency_Estimator(50, method='Histogram_Encoding', epsilon=e, n_users=1000)
+
+		reses = []
+		for j in range(0, 10):
+			a = estimator.test_protocol(nusers, input_file='../res.csv')
+			reses.append(kant(a[0], a[1]))
+
+		res2 = sum(reses) / 10
+
+		dist_hist.append(res2)
+
+		q = 1 / (math.exp(e) + 1)
+		
+		
+		estimator = Frequency_Estimator(50, method='Unary_Encoding', epsilon=e, p=1/2, q=q, n_users=1000)
+	
+		reses = []
+		for j in range(0, 10):
+			a = estimator.test_protocol(nusers, input_file='../res.csv')
+			reses.append(kant(a[0], a[1]))
+
+		res3 = sum(reses) / 10
+
+		unary.append(res3)
+
+		estimator = Frequency_Estimator(50, method='Random_Matrix', n_users=1000)
+	
+		reses = []
+		for j in range(0, 10):
+			a = estimator.test_protocol(nusers, input_file='../res.csv')
+			reses.append(kant(a[0], a[1]))
+
+		res4 = sum(reses) / 10
+
+		randmatr.append(res4)
+
+	plt.plot(epsilon, direct, 'r')
+	plt.plot(epsilon, dist_hist, 'g')
+	plt.plot(epsilon, unary, 'm')
+	plt.plot(epsilon, dist_hist, 'y')
+	plt.xlabel("Epsilon")
 	plt.ylabel("Accuracy Error")
 
 	plt.legend(["Direct Encoding", "Histogram Encoding", "Unary Encoding", "Distance Sensitive Encoding"])
