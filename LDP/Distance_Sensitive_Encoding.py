@@ -14,7 +14,6 @@ class Distance_Sensitive_Encoding_client():
 		self.p = self.a
 		self.probs = [self.a / (i * (i + 1)) for i in range(1, self.theta)]
 		self.q = self.a / (self.theta * (self.theta + 1))
-		# print("Initializing D.S. protocol, with\np = " + str(self.p) + "\ne = " + str(self.e) + "\ntheta = " + str(self.theta) + "\n")
 
 	# encoding: simply return the value itself
 	def encode(self, v):
@@ -89,7 +88,6 @@ class Distance_Sensitive_Encoding_aggregator():
     			# Support(i) = {i}, thus the protocol supports only the values equal to 
 				# the current value
 				if i == j:
-				# if abs(i - j) < self.theta:
 					sum_v += 1
 			# normalize the sum by trying to extract the noise
 			results[i] = ((sum_v) - n * self.q) / (self.p_star - self.q)
