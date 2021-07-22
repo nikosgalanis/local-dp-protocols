@@ -185,7 +185,7 @@ e = np.log(12)
 if res == 'i':
 	estimator = Frequency_Estimator(50, method='Direct_Encoding', epsilon=e, n_users=1000)
 
-	res = estimator.test_protocol(max_samples, input_file='../res.csv')
+	res = estimator.test_protocol(max_samples, input_file='res.csv')
 
 	print(res[0])
 	print(res[1])
@@ -194,7 +194,7 @@ if res == 'i':
 
 	estimator = Frequency_Estimator(50, method='Distance_Sensitive_Encoding', epsilon=e, n_users=1000)
 
-	res1 = estimator.test_protocol(max_samples, input_file='../res.csv')
+	res1 = estimator.test_protocol(max_samples, input_file='res.csv')
 
 	print(res1[0])
 	print(res1[1])
@@ -236,7 +236,6 @@ elif res == 'u':
 	randmatr = []
 	size = 2000
 
-	epsilon = [round(i/3 + 0.8, 2) for i in range (0,12)]
 	max_samples = 1200
 	d = 50
 	
@@ -249,13 +248,13 @@ elif res == 'u':
 
 	kant = qif.metric.kantorovich(euclid)   # distance on distributions
 
-	e = np.log(20)
+	e = np.log(12)
 	for i in tq.tqdm(x, position=0, leave=True):
 
 		estimator = Frequency_Estimator(50, method='Direct_Encoding', epsilon=e, n_users=1000)
 		reses = []
 		for j in range(0, 10):
-			a = estimator.test_protocol(i, input_file='../res.csv')
+			a = estimator.test_protocol(i, input_file='res.csv')
 			reses.append(kant(a[0], a[1]))
 		res = sum(reses) / i * 10  
 
@@ -265,7 +264,7 @@ elif res == 'u':
 
 		reses = []
 		for j in range(0, 10):
-			a = estimator.test_protocol(i, input_file='../res.csv')
+			a = estimator.test_protocol(i, input_file='res.csv')
 			reses.append(kant(a[0], a[1]))
 
 		res1 = sum(reses) / i *  10
@@ -276,7 +275,7 @@ elif res == 'u':
 
 		reses = []
 		for j in range(0, 10):
-			a = estimator.test_protocol(i, input_file='../res.csv')
+			a = estimator.test_protocol(i, input_file='res.csv')
 			reses.append(kant(a[0], a[1]))
 
 		res2 = sum(reses) / i * 10
@@ -290,7 +289,7 @@ elif res == 'u':
 	
 		reses = []
 		for j in range(0, 10):
-			a = estimator.test_protocol(i, input_file='../res.csv')
+			a = estimator.test_protocol(i, input_file='res.csv')
 			reses.append(kant(a[0], a[1]))
 
 		res3 = sum(reses) / i *  10
@@ -301,7 +300,7 @@ elif res == 'u':
 	
 		reses = []
 		for j in range(0, 10):
-			a = estimator.test_protocol(i, input_file='../res.csv')
+			a = estimator.test_protocol(i, input_file='res.csv')
 			reses.append(kant(a[0], a[1]))
 
 		res4 = sum(reses) / i *  10
@@ -344,7 +343,7 @@ else:
 		estimator = Frequency_Estimator(50, method='Direct_Encoding', epsilon=e, n_users=1000)
 		reses = []
 		for j in range(0, 10):
-			a = estimator.test_protocol(nusers, input_file='../res.csv')
+			a = estimator.test_protocol(nusers, input_file='res.csv')
 			reses.append(kant(a[0], a[1]))
 		res = sum(reses) / 10  
 
@@ -354,7 +353,7 @@ else:
 
 		reses = []
 		for j in range(0, 10):
-			a = estimator.test_protocol(nusers, input_file='../res.csv')
+			a = estimator.test_protocol(nusers, input_file='res.csv')
 			reses.append(kant(a[0], a[1]))
 
 		res1 = sum(reses) / 10
@@ -365,7 +364,7 @@ else:
 
 		reses = []
 		for j in range(0, 10):
-			a = estimator.test_protocol(nusers, input_file='../res.csv')
+			a = estimator.test_protocol(nusers, input_file='res.csv')
 			reses.append(kant(a[0], a[1]))
 
 		res2 = sum(reses) / 10
@@ -379,7 +378,7 @@ else:
 	
 		reses = []
 		for j in range(0, 10):
-			a = estimator.test_protocol(nusers, input_file='../res.csv')
+			a = estimator.test_protocol(nusers, input_file='res.csv')
 			reses.append(kant(a[0], a[1]))
 
 		res3 = sum(reses) / 10
@@ -390,7 +389,7 @@ else:
 	
 		reses = []
 		for j in range(0, 10):
-			a = estimator.test_protocol(nusers, input_file='../res.csv')
+			a = estimator.test_protocol(nusers, input_file='res.csv')
 			reses.append(kant(a[0], a[1]))
 
 		res4 = sum(reses) / 10
