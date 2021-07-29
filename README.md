@@ -1,5 +1,7 @@
 # Protection of Sensitive Data: Creating, Analyzing and Testing Protocols of Differential Privacy
 
+The full paper of the thesis is available [here](https://pergamos.lib.uoa.gr/uoa/dl/frontend/en/browse/2958792)
+
 The problem of preserving privacy while extracting information during data analysis, has been an everlasting one. Specifically, during the big­data era, user details can be easily compromised by a malicious handler, something considered both as a security, and as a privacy issue.
 
 The optimal fix to the subject, is Differential Privacy, which is actually a promise, made by the data handler to the user, that they will not be affected, by allowing their data to be used in any analysis, no matter what other stud­ies/databases/info resources are available. Meanwhile, the output data statistics should be accurate enough for any researcher to extract useful information from them.
