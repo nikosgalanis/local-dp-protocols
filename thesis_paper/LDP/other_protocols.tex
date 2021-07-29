@@ -2,11 +2,11 @@
 
 \section{Existing Protocols for Local DP}
 
-Apart from R.R., many L.D.P. protocols have been implemented during the years, with many of them being widely used by companies in order to protect users' data. One of the most famous protocols is \textbf{RAPPOR}, created by Google, and being currently used in the Chrome browser for the company to provide useful info to its users without compromising their privacy. Also, Apple has created ts own protocol of L.D.P., and utilize it in their products. 
+Apart from R.R., several L.D.P. protocols have been implemented during the years, with many of them being widely used by companies in order to protect users' data. One of the most famous protocols is \emph{RAPPOR}([15]), created by Google, and being currently used in the Chrome browser for the company to provide useful info to its users without compromising their privacy. Also, Apple has created ts own protocol of L.D.P., and utilize it in their products. 
 
 However, we are not going to focus on those protocols moving forward, than the ones presented in [10], a paper which introduces many algorithms for L.D.P., each one with different perturbation techniques and suitable for different circumstances.
 
-During this chapter we are going to give a definition of each algorithm, implement it using Python, and compare the accuracy results produced by those protocols, just like during our testings of the G.D.P. models. Each protocol has two parts: the \textbf{users} and the \textbf{aggregator}. For the users we must each time define the following functions:
+During this chapter we are going to give a definition of each algorithm, implement it using Python, and compare the accuracy results produced by those protocols, just like during our testings of the G.D.P. models. Each protocol has two parts: the \emph{users} and the \emph{aggregator}. For the users we must each time define the following functions:
 
 \begin{itemize}
     \item $Encode()$: Encodes the true value that the user wants to report
@@ -78,7 +78,7 @@ Also, for a protocol to be pure, two probabilities must be defined, $p^*$ and $q
 If a protocol is pure, the estimation of the total reported values for an element of the dataset $i$, is the following:
 
 \begin{align}
-    Estimation = \frac{\sum_{j} 1_{support(y^j)}(i) - nq*}{p^* - q^*}
+    \text{Estimation} = \frac{\sum_{j} 1_{support(y^j)}(i) - nq*}{p^* - q^*}
 \end{align}
 where $j$ denotes the j-th user reporting their value, and $n$ the total size of the vector of the reported values.
 
@@ -133,7 +133,7 @@ where $Lap()$ denotes the noise drawn from the Laplace distribution, where
     Pr[Lap(\beta) = x] = \frac{1}{2\beta}e^{\frac{-|x|}{\beta}}
 \end{align*}
 
-\textbf{Aggregation:} Several methods are proposed for aggregating the results created by the H.E. protocol, but as mentioned by the authors, the best one is called \textbf{Thresholding with H.E.}, where a threshold value is introduced in order to decide what to keep from the reported values. The support function is altered as following:
+\textbf{Aggregation:} Several methods are proposed for aggregating the results created by the H.E. protocol, but as mentioned by the authors, the best one is called \emph{Thresholding with H.E.}, where a threshold value is introduced in order to decide what to keep from the reported values. The support function is altered as following:
 
 \begin{align*}
     Support(B) = \{v | B[v] > \theta\}
@@ -193,9 +193,9 @@ Each user will report one of these 50 values, and the aggregator of each protoco
 
 \subsection{Goal}
 
-Wanting to decide which protocols behaves better, a number of different metrics will be used. The main focus of our testings will be the vectors that the aggregators provide, which we will compare with each other, as well as with the vector containing the true answers. In a similar way as our G.D.P. testings, we are going to run the protocols for different values of epsilon, and different number of users used. The second one is extremely important in L.D.P., as we mentioned earlier that many protocols struggle with a small number of input, as the noise drawn is significant. 
+We want to decide which protocols behaves better, thus a number of different metrics will be used. The main focus of our testings will be the vectors that the aggregators provide, which we will compare with each other, as well as with the vector containing the true answers. In a similar way as our G.D.P. testings, we are going to run the protocols for different values of epsilon, and different number of users used. The second one is extremely important in L.D.P., as we mentioned earlier that many protocols struggle with a small number of input, as the noise drawn is significant. 
 
-When it comes down to the choice of metrics, we are going to use the \textbf{Manhattan Distance}, known as the $l1$-norm, as well as the \textbf{Kantorovic Distance}, explained in 3.2.5.1.
+With respect to the choice of metrics, we are going to use the \emph{Manhattan Distance}, known as the $l1$-norm, as well as the \emph{Kantorovic Distance}, explained in 3.2.5.1.
 
 \subsection{Epsilon Measurements}
 
@@ -213,10 +213,10 @@ First, we are going to run all the protocols and compare them using the Manhatta
 We gather many useful observations from the graph:
 
 \begin{itemize}
-    \item The Random Matrix protocol does not function as expected, as \textbf{its accuracy does not follow the logarithmic curve we are used to when epsilon increases.} However, for small values of ε, its results are acceptable, and some times even better than the pure protocols.
-    \item \textbf{The pure protocols behave in a similar way}, with the error stabilizing when epsilon gets higher than 2.5. 
-    \item \textbf{The Direct Encoding protocol was the worst behaviour among the pure ones}, with its error being extremely high for epsilon values lower than 1.  This is mainly due to the fact that when ε gets too small, the probability of telling the truth gets significantly low, thus creating a big error in accuracy.
-    \item \textbf{The optimized U.E. protocol has the best behaviour} in comparison to the other protocols tested.
+    \item The Random Matrix protocol does not function as expected, as \emph{its accuracy does not follow the logarithmic curve we are used to when epsilon increases.} However, for small values of ε, its results are acceptable, and some times even better than the pure protocols.
+    \item \emph{The pure protocols behave in a similar way}, with the error stabilizing when epsilon gets higher than 2.5. 
+    \item \emph{The Direct Encoding protocol was the worst behaviour among the pure ones}, with its error being extremely high for epsilon values lower than 1.  This is mainly due to the fact that when ε gets too small, the probability of telling the truth gets significantly low, thus creating a big error in accuracy.
+    \item \emph{The optimized U.E. protocol has the best behaviour} in comparison to the other protocols tested.
 \end{itemize}
 
 Next up, we are going to run the same testings, but this time using the Kantorovich metric. We expect the protocols to behave even worse, because of the identity of the metric: the Kant. metric pays attention to the distance of the reported answer from the true one. The current protocols do not take into account the distance of the two answers, thus the metric will probably report a higher error. The results of the runs are shown in \textbf{Figure 4.4.}
@@ -227,13 +227,13 @@ Next up, we are going to run the same testings, but this time using the Kantorov
 \end{figure}
 
 
-As we expected, the protocols produce a higher error, with the D.E. being the worst among them, especially for lower values of epsilon. This is a rather alarming notice, in which we will come back in a later section.
+As we expected, the protocols produce a higher error, with the D.E. being the worst among them, especially for lower values of epsilon. This is a rather alarming notice, in which we will come back in Section 4.6.
 
 
 \subsection{Increasing number of users}
 
 
-The second testing that we will elaborate, is the accuracy error depending on the number of users used during the survey covered by the protocol. In the definition of L.D.P. the observation of the need of lots of users was made, and it is now time that we examine it. We are going to use a \textbf{fixed epsilon value}, one that our protocols behave similarly for (at least the pure ones, in which we will focus our research moving forward). By observing Figure 4.3, we can see that the protocols behave in a similar manner when it comes down to accuracy error for epsilon values grater than 1.3. Thus, our fixed epsilon value will be 1.5.
+The second experiment that we will conduct is the accuracy error depending on the number of users used during the survey covered by the protocol. In the definition of L.D.P. the observation of the need of lots of users was made, and it is now time that we examine it. We are going to use a \emph{fixed epsilon value}, one that our protocols behave similarly for (at least the pure ones, in which we will focus our research moving forward). Our epsilon value that we are going ot used will be fixed and equal to 1.5.
 
 We are going to run the protocols and compare them using the Manhattan Distance. Additionally, we are each time going to divide the result of the metric with the number of users participated, as the simple error is going to increase when the users increase. Hence, this division is going to give us the error depending on the size of our domain. The results are shown in \textbf{Figure 4.5.}
 

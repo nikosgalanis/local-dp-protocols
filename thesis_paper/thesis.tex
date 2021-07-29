@@ -108,6 +108,9 @@ Mε την υπάρχουσα κατάσταση, υπάρχει η απλή λ�
 Κατά την διάρκεια αυτής της εργασίας, θα πραγματοποιηθούν πολλές μετρήσεις, με στόχο να γίνει πειστική η χρησιμότητα και η αποτελεσματικότητα της Διαφορικής Ιδιωτικότητας.
 
 }
+
+\inscriptionEn{\emph{}}
+
 %
 % Subject area and keywords
 %
@@ -155,17 +158,17 @@ Mε την υπάρχουσα κατάσταση, υπάρχει η απλή λ�
 
 \chapter{CONCLUSIONS AND FUTURE WORK}
 
-After the elaboration of the current Thesis, it is clear that Differential Privacy is an extremely secure and efficient way to protect sensitive data. Having two forms, the Global and the Local, it can cover many different scenarios, including Machine Learning applications.
+The goal of this thesis was to analyze the importance of protecting sensitive data, and doing so in an efficient way. After its elaboration, it is clear that Differential Privacy is a secure and efficient way for data anonymization. Having two forms, the Global and the Local, it can cover many different scenarios, including Machine Learning applications.
 
-Differential Privacy is the future of Data Protection and Anonymization, as its results can not be compromised, due to the random noise that the algorithms introduce. Unlike previous methods, like k-anonymity, there is not yet an attack that can reduce the privacy created by D.P. algorithms, which makes this technique the best one for data protection.
+Differential Privacy is the future of Data Protection and Anonymization, as its results can not be compromised, due to the random noise that the algorithms introduce. Unlike previous methods, such as k-anonymity, there is not yet an attack that can reduce the privacy created by D.P. algorithms, which makes this technique ideal.
 
-During the introduction we claimed that it is difficult to comprehend how after the use of random noise the data is still useful. Now, it is clear that this promise can be delivered, as the mathematical ideas behind the aggregation are build with the mindset of eliminating this noise using data normalization.
+Despite the use of random noise the data is still useful, as the mathematical ideas behind the aggregation were built with the mindset of eliminating this noise using data normalization.
 
-Having explored many different applications, algorithms and protocols we can safely say that when it comes down to Global D.P., IBM's diffprivlib is a state of the art library that produces extremely good results. Its use is quite simple as a Python API is provided, thus 
+Having explored many different applications, algorithms and protocols we can safely say that when it comes down to Global D.P., IBM's diffprivlib is a state of the art library that produces extremely good results. Its use is quite simple as a Python API is provided, thus can be safely added to any numerical dataset.
 
-When someone wants to apply L.D.P. during a survey, the pure protocols analyzed and tested are suitable for high efficiency combined with good protections of the members. However, when the number of users is small, \textbf{the Distance Sensitive Protocol created for the needs of this Thesis is the best option}. 
+When someone wants to apply L.D.P. during a survey, the pure protocols analyzed and tested are suitable for high efficiency combined with good protections of the members. With simple algorithms, they do not require a trusted curator in order to perform, hence users can perturb their data, and then safely report it. However, when the number of users is small, \emph{the Distance Sensitive Protocol created for the needs of this Thesis is the best option}, as the other protocols produce extreme noise in order to maintain the privacy levels. On the contrary, the D.S. protocol takes into account the distance between the true value and the one being reported when creating its probabilistic space, thus lowering the error produced.
 
-Our plans for future work are centered around the D.S. protocol. We would like to perfect its aggregation method, as it may produce satisfying results, but with a different approach it can maybe become even better. Moreover, we would like to perform more demanding testings for extreme cases of dataset sizes, domain sizes and theta values.
+Our plans for future work are centered around the D.S. protocol. We would like to perfect its aggregation method, as it may produce satisfying results, but with a different approach it can maybe become even better. Moreover, we would like to perform more demanding experiments for extreme cases of dataset sizes, domain sizes and theta values.
 
 Finally, similar testings like the ones introduced in this Thesis can be performed in other D.P. libraries, as the accuracy measurements is a good indicator if someone wants to rank those libraries.
 
@@ -262,10 +265,16 @@ More information for the repository and its contents can be found in the README 
 
 % % manually include the bibliography
 \bibliographystyle{plain}
-{\footnotesize \bibliography{references}}
+
+
+{\huge \bibliography{references}}
 
 % % include it also in ToC (do sth on your own)
 \addcontentsline{toc}{chapter}{REFERENCES}
+
+
+\fontsize{10}{14}\selectfont
+\setmainfont{Arial}
 
 [1]\hspace{1cm}Dwork, C., & Roth, A. (2014). The algorithmic foundations of differential privacy. now Publishers Inc. 
 
@@ -296,5 +305,9 @@ More information for the repository and its contents can be found in the README 
 [14]\hspace{1cm}Bassily, R., & Smith, A. (2015). Local, Private, Efficient Protocols for Succinct Histograms. Proceedings of the Forty-Seventh Annual ACM Symposium on Theory of Computing.
 
 [15]\hspace{1cm}Erlingsson, Ú., Pihur, V., & Korolova, A. (2014). RAPPOR. Proceedings of the 2014 ACM SIGSAC Conference on Computer and Communications Security.
+
+[16]\hspace{1cm} "Surgery Charges Across the U.S.", https://data.world/dmikebishop/surgery-charges-across-the-u-s.
+
+[17]\hspace{1cm} "NBA Salaries", https://data.world/datadavis/nba-salaries
 
 \end{document}

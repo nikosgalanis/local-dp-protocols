@@ -10,7 +10,7 @@
 \par While providing data may seem inevitable and yet beneficiary for all parties, there is always a risk that this data will be used in order to compromise the user's privacy. When the information lands in the wrong hands, it can expose some characteristics of the user that he does not want to be shared. In our medical example, let's now consider a patient with a rare decease, who logs-in to a local hospital. He might consent to share his personal data (name, age etc.), but only for the doctors to use it. What will happen when the doctors give the data of the whole hospital for analysis? This patient, considering he is one of the few that has this illness, may be stigmatized,  when the data analysts find out his condition. Wouldn't it be better for him, if, let's say, his name was not exposed? We will see later on, why this approach, is found to be successful, but not enough, for extreme cases.
 
 \section{Definition of the problem of privacy}
-\par In general, when we consider the \textbf{problem of privacy}, we refer to the protection of the disclosure of sensitive information of individuals, when a collection of data about these individuals (dataset) is made publicly available.
+\par In general, when we consider the \emph{problem of privacy}, we refer to the protection of the disclosure of sensitive information of individuals, when a collection of data about these individuals (dataset) is made publicly available.
 
 \subsection{Achieving Privacy via Anonymization}
 
@@ -22,8 +22,8 @@
 
 Randomization can be applied to the data of the users in two different forms:
 \begin{itemize}
-    \item Apply random noise \textbf{directly to the data}. This will result to altered data, which will then be processed, so that the adversary will not be able to individualize the entries in the dataset.
-    \item Apply random noise to \textbf{queries asked to the dataset}. In that case, the dataset is not directly available to the analysts. Instead, they are allowed to ask questions to the dataset, and the answers are then being randomized, and returned.
+    \item Apply random noise \emph{directly to the data}. This will result to altered data, which will then be processed, so that the adversary will not be able to individualize the entries in the dataset.
+    \item Apply random noise to \emph{queries asked to the dataset}. In that case, the dataset is not directly available to the analysts. Instead, they are allowed to ask questions to the dataset, and the answers are then being randomized, and returned.
 \end{itemize}
 
 Both the above approaches are utilized, but the second one is widely preferred. During our analysis of data privacy, we are going to dive in both of those techniques, as well as the libraries that they are used in.
@@ -39,7 +39,7 @@ Both the above approaches are utilized, but the second one is widely preferred. 
 We are going to answer those questions later on, during our next chapters. 
 
 \section{Goal of this thesis}
-As discussed in the introduction, that the most effective up-to date method for applying privacy into a dataset, is via randomization. The method used, is called \textbf{Differential Privacy}, and is based on injecting noise into the users' data. 
+As discussed in the introduction, that the most effective up-to date method for applying privacy into a dataset, is via randomization. The method used, is called \emph{Differential Privacy}, and is based on injecting noise into the users' data. 
 
 The theory behind this method includes many mathematical theorems, however, it can by easily explained. We will proceed by taking a look on those principles, and analysing the theory behind this form on data privacy. Then, we will proceed by examining some existing applications of D.P., especially some libraries that help us to apply this technique in a dataset. Finally, we are going to create our own library in order to apply Local D.P., a form of privacy that we will discuss in the next chapter. 
 
